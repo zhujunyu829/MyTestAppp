@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
+#import "MainCtr.h"
+#import "LoginCtr.h"
 @interface AppDelegate ()
 
 @end
@@ -17,6 +18,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    MainCtr *mainCtr = [MainCtr new];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mainCtr];
+    nav.navigationBarHidden = YES;
+//    self.window.rootViewController = nav;
+    
+    LoginCtr *login = [LoginCtr new];
+    self.window.rootViewController = login;
+    [self.window makeKeyAndVisible];
+
     return YES;
 }
 
