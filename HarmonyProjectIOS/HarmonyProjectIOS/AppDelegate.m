@@ -27,7 +27,9 @@
 }
 
 - (void)cheakLogin{
-    BOOL isLogin = YES;
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:tokenKey];
+
+    BOOL isLogin = (token&& token.length);
     if (isLogin) {
         MainCtr *mainCtr = [MainCtr new];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mainCtr];

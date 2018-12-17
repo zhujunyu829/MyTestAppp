@@ -16,6 +16,8 @@
 #import "masonry.h"
 #import "HeadView.h"
 #import "AppAlertView.h"
+#import "AFNetworking.h"
+#import "RequestManger.h"
 
 #endif
 // Include any system framework and library headers here that should be included in all compilation units.

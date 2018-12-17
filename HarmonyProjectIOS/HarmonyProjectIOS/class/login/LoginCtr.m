@@ -134,17 +134,44 @@
 }
 
 - (void)loginAction:(id)sener{
+    NSString *phone = _phone.text;
+    NSString *code = _password.text;
+    //apps/user/login?moble=18684868001&smsCode=940471
+    DefineWeakSelf(weakSelf);
+    [[RequestManger sharedClient] GET:@"apps/user/login" parameters:@{@"moble":phone?:@"",
+                                                       @"smsCode":code?:@""
+                                                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                                                           NSString *token = responseObject[@"result"][@"tokenId"];
+                                                           [[NSUserDefaults standardUserDefaults] setObject:token?:@"" forKey:tokenKey];
+                                                           [[NSUserDefaults standardUserDefaults] synchronize];
+                                                           [weakSelf loginSuccess];
+                                                       } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                                           
+                                                       }];
     
+}
+- (void)loginSuccess{
     MainCtr *mainCtr = [MainCtr new];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mainCtr];
     nav.navigationBarHidden = YES;
-        [UIApplication sharedApplication].keyWindow.rootViewController = nav;
+    [UIApplication sharedApplication].keyWindow.rootViewController = nav;
 }
+
 - (void)weichatAction:(id)sener{
     
 }
 - (void)sentCodeAction:(id)sener{
-    
+    NSString *phone = _phone.text;
+    if (!phone || !phone.length) {
+        
+        return;
+    }
+    [[RequestManger sharedClient] GET:@"apps/user/getSmsCode" parameters:@{@"moble":phone?:@""
+                                                                           } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                                                                               
+                                                                           } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                                                               
+                                                                           }];
 }
 /*
 #pragma mark - Navigation

@@ -13,6 +13,7 @@
 #define safeTopHeight 20
 #define safeBottomHeight 34
 #define AppTextColor  ZJYColorHex(@"#4C4948")
+#define tokenKey @"token"
 /**
  空白代码块
  */

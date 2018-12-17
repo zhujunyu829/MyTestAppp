@@ -23,6 +23,7 @@
 @implementation OrderCtr
 
 - (void)viewDidLoad {
+    [self requsetList];
     [super viewDidLoad];
     [self configHeadView];
     [self configHeadbtnview];
@@ -153,5 +154,11 @@
     // Pass the selected object to the new view controller.
 }
 */
-
+- (void)requsetList{
+    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
+    }];
+}
 @end
