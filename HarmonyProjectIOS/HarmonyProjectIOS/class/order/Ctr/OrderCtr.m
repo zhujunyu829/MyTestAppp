@@ -7,6 +7,7 @@
 //
 
 #import "OrderCtr.h"
+#import "HistoryView.h"
 
 @interface OrderCtr ()
 {
@@ -14,6 +15,8 @@
     UIView *_headBtnView;
     UIImageView *_selimgeView;
     UIButton *_currentbnt;
+    HistoryView *_personHistory;
+    HistoryView *_company;
 }
 @end
 
@@ -23,6 +26,7 @@
     [super viewDidLoad];
     [self configHeadView];
     [self configHeadbtnview];
+    [self configHistory];
     self.view.backgroundColor = [UIColor whiteColor];
 
     // Do any additional setup after loading the view.
@@ -30,6 +34,25 @@
 - (void)configHeadView{
     _headView = [HeadView new];
     [self.view addSubview:_headView];
+}
+- (void)configHistory{
+    _personHistory = [[HistoryView alloc] initWithFrame:CGRectMake(0, _headView.bottom +50, _headView.width, self.view.height - (_headView.bottom +50))];;
+    [self.view addSubview:_personHistory];
+    _company = [[HistoryView alloc] initWithFrame:CGRectMake(0, _headView.bottom +50, _headView.width, self.view.height - (_headView.bottom +50))];
+    [self.view addSubview:_company];
+    
+//    [_personHistory mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(_headBtnView.mas_bottom);
+//        make.width.equalTo(self.view.mas_width);
+//        make.height.equalTo(self.view.mas_height).offset(-(50+_headView.height));
+//    }];
+//    [_company mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(_headBtnView.mas_bottom);
+//        make.width.equalTo(self.view.mas_width);
+//        make.height.equalTo(self.view.mas_height).offset(-(50+_headView.height));
+//    }];
+    _personHistory.hidden = YES;
+    
 }
 - (void)configHeadbtnview{
 
@@ -87,16 +110,18 @@
     switch (sender.tag -10) {
         case 0:
         {
-            [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(widht  +50);
-                make.left.offset(-30);
-                make.height.equalTo(_headView.mas_height).offset(10);
-                make.top.offset(-5);
-            }];
+//            [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.width.mas_equalTo(widht  +50);
+//                make.left.offset(-30);
+//                make.height.equalTo(_headView.mas_height).offset(10);
+//                make.top.offset(-5);
+//            }];
            
         }break;
         case 1:
         {
+            _company.hidden = NO;
+            _personHistory.hidden = YES;
             [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(widht );
                 make.centerX.offset(0);
@@ -106,6 +131,8 @@
         }break;
         case 2:
         {
+            _company.hidden = YES;
+            _personHistory.hidden = NO;
             [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(widht+50 );
                 make.right.offset(30);

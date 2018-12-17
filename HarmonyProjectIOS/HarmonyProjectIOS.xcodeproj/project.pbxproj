@@ -28,6 +28,11 @@
 		D9C8963921C74975003D0AF0 /* UIColor+RGB.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8962621C74975003D0AF0 /* UIColor+RGB.m */; };
 		D9C8963A21C74975003D0AF0 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8962D21C74975003D0AF0 /* HeadView.m */; };
 		D9C8963B21C74975003D0AF0 /* MainCtr.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8962E21C74975003D0AF0 /* MainCtr.m */; };
+		D9C8963E21C74DC8003D0AF0 /* AppAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8963D21C74DC8003D0AF0 /* AppAlertView.m */; };
+		D9C8964321C77627003D0AF0 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964221C77627003D0AF0 /* ProductModel.m */; };
+		D9C8964621C7764D003D0AF0 /* HistoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964521C7764D003D0AF0 /* HistoryView.m */; };
+		D9C8964921C77FC9003D0AF0 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964821C77FC9003D0AF0 /* HistoryCell.m */; };
+		D9C8964C21C784C1003D0AF0 /* OrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964B21C784C1003D0AF0 /* OrderModel.m */; };
 		EE9ADF6780DD8FD0EC51117D /* libPods-HarmonyProjectIOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 961AA5287D969D99E9487C01 /* libPods-HarmonyProjectIOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +103,16 @@
 		D9C8962D21C74975003D0AF0 /* HeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadView.m; sourceTree = "<group>"; };
 		D9C8962E21C74975003D0AF0 /* MainCtr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainCtr.m; sourceTree = "<group>"; };
 		D9C8963021C74975003D0AF0 /* AppMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacro.h; sourceTree = "<group>"; };
+		D9C8963C21C74DC8003D0AF0 /* AppAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppAlertView.h; sourceTree = "<group>"; };
+		D9C8963D21C74DC8003D0AF0 /* AppAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppAlertView.m; sourceTree = "<group>"; };
+		D9C8964121C77627003D0AF0 /* ProductModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductModel.h; sourceTree = "<group>"; };
+		D9C8964221C77627003D0AF0 /* ProductModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductModel.m; sourceTree = "<group>"; };
+		D9C8964421C7764D003D0AF0 /* HistoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryView.h; sourceTree = "<group>"; };
+		D9C8964521C7764D003D0AF0 /* HistoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryView.m; sourceTree = "<group>"; };
+		D9C8964721C77FC9003D0AF0 /* HistoryCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryCell.h; sourceTree = "<group>"; };
+		D9C8964821C77FC9003D0AF0 /* HistoryCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryCell.m; sourceTree = "<group>"; };
+		D9C8964A21C784C1003D0AF0 /* OrderModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderModel.h; sourceTree = "<group>"; };
+		D9C8964B21C784C1003D0AF0 /* OrderModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +243,8 @@
 		D9C8960F21C74975003D0AF0 /* order */ = {
 			isa = PBXGroup;
 			children = (
+				D9C8964021C775F7003D0AF0 /* model */,
+				D9C8963F21C775EB003D0AF0 /* view */,
 				D9C8961021C74975003D0AF0 /* Ctr */,
 			);
 			path = order;
@@ -307,6 +324,8 @@
 			children = (
 				D9C8962C21C74975003D0AF0 /* HeadView.h */,
 				D9C8962D21C74975003D0AF0 /* HeadView.m */,
+				D9C8963C21C74DC8003D0AF0 /* AppAlertView.h */,
+				D9C8963D21C74DC8003D0AF0 /* AppAlertView.m */,
 			);
 			path = commView;
 			sourceTree = "<group>";
@@ -317,6 +336,28 @@
 				D9C8963021C74975003D0AF0 /* AppMacro.h */,
 			);
 			path = Macro;
+			sourceTree = "<group>";
+		};
+		D9C8963F21C775EB003D0AF0 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				D9C8964421C7764D003D0AF0 /* HistoryView.h */,
+				D9C8964521C7764D003D0AF0 /* HistoryView.m */,
+				D9C8964721C77FC9003D0AF0 /* HistoryCell.h */,
+				D9C8964821C77FC9003D0AF0 /* HistoryCell.m */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		D9C8964021C775F7003D0AF0 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				D9C8964121C77627003D0AF0 /* ProductModel.h */,
+				D9C8964221C77627003D0AF0 /* ProductModel.m */,
+				D9C8964A21C784C1003D0AF0 /* OrderModel.h */,
+				D9C8964B21C784C1003D0AF0 /* OrderModel.m */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -509,10 +550,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9C8964621C7764D003D0AF0 /* HistoryView.m in Sources */,
 				D9C8963321C74975003D0AF0 /* AnalyzeCtr.m in Sources */,
 				D9C895E121C7491F003D0AF0 /* ViewController.m in Sources */,
 				D9C8963B21C74975003D0AF0 /* MainCtr.m in Sources */,
 				D9C895EC21C74924003D0AF0 /* main.m in Sources */,
+				D9C8964C21C784C1003D0AF0 /* OrderModel.m in Sources */,
 				D9C8963721C74975003D0AF0 /* UIIamge+FixOrien.m in Sources */,
 				D9C8963521C74975003D0AF0 /* UIView+capture.m in Sources */,
 				D9C8963821C74975003D0AF0 /* UIView+KGViewExtend.m in Sources */,
@@ -520,8 +563,11 @@
 				D9C8963221C74975003D0AF0 /* PersonCtr.m in Sources */,
 				D9C8963921C74975003D0AF0 /* UIColor+RGB.m in Sources */,
 				D9C8963421C74975003D0AF0 /* LoginCtr.m in Sources */,
+				D9C8964921C77FC9003D0AF0 /* HistoryCell.m in Sources */,
+				D9C8964321C77627003D0AF0 /* ProductModel.m in Sources */,
 				D9C8963121C74975003D0AF0 /* OrderCtr.m in Sources */,
 				D9C895DE21C7491F003D0AF0 /* AppDelegate.m in Sources */,
+				D9C8963E21C74DC8003D0AF0 /* AppAlertView.m in Sources */,
 				D9C8963621C74975003D0AF0 /* NSDictionary+CheakValue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -49,6 +49,7 @@ typedef void(^voidBlock) (void);
 
 static const int  OpenSettings_Tag = 1001110;
 
+#define DefineWeakSelf(weakSelf) __weak __typeof(self) weakSelf = self;
 
 /**
  *输出宏自定义

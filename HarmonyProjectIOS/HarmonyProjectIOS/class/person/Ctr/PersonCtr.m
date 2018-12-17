@@ -124,6 +124,15 @@
 }
 
 - (void)logOut{
+    DefineWeakSelf(weakSelf);
+    [AppAlertView showTitle:@"确认退出" confirm:^{
+        [weakSelf logOutAction];
+    } cancel:^{
+        
+    }];
+  
+}
+- (void)logOutAction{
     LoginCtr *ctr = [LoginCtr new];
     [UIApplication sharedApplication].keyWindow.rootViewController = ctr;
 }
