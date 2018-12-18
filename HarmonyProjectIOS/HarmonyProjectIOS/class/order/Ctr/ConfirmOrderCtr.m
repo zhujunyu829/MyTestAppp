@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     HeadView *_headView;
     UIView *_noticeView;
     UIButton *_confirmBtn;
+    UIView *_countView;
 }
 @end
 
@@ -50,8 +51,39 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     [_headView endRefresh];
     [self.view addSubview:_headView];
 }
+- (void)configCountView{
+    _countView = [UIView new];
+    _countView.width = self.view.width;
+    _countView.height = 50;
+    _table.tableFooterView = _countView;
+    _countView.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *coutLabel = [UILabel new];
+    [_countView addSubview:coutLabel];
+    
+    UILabel *totalLabel = [UILabel new];
+    [_countView addSubview:totalLabel];
+    
+    UILabel *moneyLable = [UILabel new];
+    [_countView addSubview:moneyLable];
+    
+    [coutLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(12.5);
+        make.right.offset(-15);
+    }];
+    
+    [moneyLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(37.5);
+        make.right.offset(-15);
+    }];
+    [totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(moneyLable.mas_centerY);
+        make.right.equalTo(moneyLable.mas_left).offset(-15);
+    }];
+    
+}
 - (void)configBottomBtn{
-    NSArray *btnArr = @[@"存为模版",@"使用订单",@"确认订单"];
+    NSArray *btnArr = @[@"存为模版",@"使用模版",@"确认订单"];
     float width = self.view.width/btnArr.count +1;
     float height = 40;
     for (int i = 0 ; i < btnArr.count; i ++) {
