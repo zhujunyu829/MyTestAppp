@@ -28,6 +28,7 @@
     UITabBarController *tab = [[UITabBarController alloc] init];
     tab.viewControllers =@[[AnalyzeCtr new],[OrderCtr new],[PersonCtr new]];
     [self.view addSubview:tab.view];
+    tab.selectedIndex = 1;
     _tab = tab;
     [self configBtn];
     // Do any additional setup after loading the view.
@@ -36,7 +37,7 @@
     _tabV = [[UIView alloc] init];
     _tabV.height = 50;
     _tabV.width = ZJYDeviceWidth;
-    _tabV.top = _tab.tabBar.top -40;
+    _tabV.top = _tab.tabBar.top - safeBottomHeight;
     [_tab.view addSubview:_tabV];
     _tabV.backgroundColor = [UIColor whiteColor];
     _tab.tabBar.hidden = YES;
@@ -68,7 +69,9 @@
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_tabV addSubview:btn];
-
+        if (i == 1) {
+            [self btnAction:btn];
+        }
 //        UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:titleArr[i] image:[UIImage imageNamed:imgeName] selectedImage:[UIImage imageNamed:imgeNameSel]];
 //        UIViewController *ctr = _tab.viewControllers[i];
 //        ctr.tabBarItem = item;

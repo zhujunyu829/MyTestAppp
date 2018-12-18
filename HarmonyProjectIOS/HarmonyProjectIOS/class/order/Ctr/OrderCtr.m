@@ -8,51 +8,112 @@
 
 #import "OrderCtr.h"
 #import "HistoryView.h"
+#import "ProductModel.h"
+#import "ProductCell.h"
+#import "SeriesCell.h"
+typedef NS_ENUM(NSInteger,OrderBottomTyp) {
+    OrderBottomTypTemp =10,
+    OrderBottomTypHistory,
+    OrderBottomTypOrder
+};
 
-@interface OrderCtr ()
+@interface OrderCtr ()<UITableViewDelegate,UITableViewDataSource>
 {
     HeadView *_headView;
     UIView *_headBtnView;
-    UIImageView *_selimgeView;
     UIButton *_currentbnt;
-    HistoryView *_personHistory;
-    HistoryView *_company;
+    UITableView *_productTable;//产品列表
+    UITableView *_listTable;//系列列表
+    NSMutableArray *_seriesArr;
+    NSMutableArray *_productArr;
 }
 @end
 
 @implementation OrderCtr
 
 - (void)viewDidLoad {
-    [self requsetList];
     [super viewDidLoad];
     [self configHeadView];
     [self configHeadbtnview];
-    [self configHistory];
+    [self configBottomBtn];
+    [self configTable];
+    _productArr = [NSMutableArray new];
+    _seriesArr = [NSMutableArray new];
     self.view.backgroundColor = [UIColor whiteColor];
-
+    [self requsetList];
+   
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
     _headView = [HeadView new];
+    _headView.title =@"商城";
+    _headView.hiddenback = YES;
+    [_headView endRefresh];
     [self.view addSubview:_headView];
 }
-- (void)configHistory{
-    _personHistory = [[HistoryView alloc] initWithFrame:CGRectMake(0, _headView.bottom +50, _headView.width, self.view.height - (_headView.bottom +50))];;
-    [self.view addSubview:_personHistory];
-    _company = [[HistoryView alloc] initWithFrame:CGRectMake(0, _headView.bottom +50, _headView.width, self.view.height - (_headView.bottom +50))];
-    [self.view addSubview:_company];
+
+- (void)configBottomBtn{
+    NSArray *btnArr = @[@"使用模版",@"历史订单",@"提交新订单"];
+    float width = self.view.width/btnArr.count +1;
+    float height = 40;
+    for (int i = 0 ; i < btnArr.count; i ++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.view addSubview:btn];
+        btn.layer.masksToBounds = YES;
+        btn.layer.cornerRadius = 2;
+        btn.layer.borderWidth = 1;
+        btn.layer.borderColor = ZJYColorHex(@"D9D9D9").CGColor;
+        [btn setTitle:btnArr[i] forState:UIControlStateNormal];
+        [btn setTitleColor:ZJYColorHex(@"595757") forState:UIControlStateNormal];
+        btn.backgroundColor = ZJYColorHex(@"ffffff");
+        btn.tag = OrderBottomTypTemp+i;
+        [btn addTarget:self action:@selector(bottomAction:) forControlEvents:UIControlEventTouchUpInside];
+        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(width *i -1);
+            make.height.mas_equalTo(height);
+            make.width.mas_equalTo(width);
+            make.bottom.offset(-(50+safeBottomHeight));
+        }];
+    }
+}
+
+- (void)configTable{
+    _productTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [self.view addSubview:_productTable];
+    _listTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [self.view addSubview:_listTable];
+    _productTable.delegate = _listTable.delegate = self;
+    _productTable.dataSource = _listTable.dataSource = self;
+    _productTable.tableFooterView = [UIView new];
+    [_productTable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_headBtnView.mas_bottom);
+        make.width.equalTo(self.view.mas_width).multipliedBy(0.3);
+        make.left.offset(0);
+        make.bottom.mas_equalTo(-(40+50+safeBottomHeight));
+    }];
+    [_listTable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(_productTable.mas_height);
+        make.top.equalTo(_productTable.mas_top);
+        make.width.equalTo(self.view.mas_width).multipliedBy(0.7);
+        make.right.offset(0);
+    }];
+    UIView *lineView = [UIView new];
+    lineView.backgroundColor = ZJYColorHex(@"D9D9D9");
+    [self.view addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_listTable.mas_left);
+        make.width.mas_equalTo(1);
+        make.height.equalTo(_listTable.mas_height);
+        make.top.equalTo(_listTable.mas_top);
+    }];
+    _listTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-//    [_personHistory mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(_headBtnView.mas_bottom);
-//        make.width.equalTo(self.view.mas_width);
-//        make.height.equalTo(self.view.mas_height).offset(-(50+_headView.height));
-//    }];
-//    [_company mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(_headBtnView.mas_bottom);
-//        make.width.equalTo(self.view.mas_width);
-//        make.height.equalTo(self.view.mas_height).offset(-(50+_headView.height));
-//    }];
-    _personHistory.hidden = YES;
+    if ([_productTable respondsToSelector:@selector(setSeparatorInset:)]) {
+        [_productTable setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([_productTable respondsToSelector:@selector(setLayoutMargins:)]) {
+        [_productTable setLayoutMargins:UIEdgeInsetsZero];
+    }
     
 }
 - (void)configHeadbtnview{
@@ -66,23 +127,8 @@
         make.height.mas_offset(50);
         make.width.mas_equalTo(self.view.mas_width);
     }];
-  
-    
-    _selimgeView.centerX = ZJYDeviceWidth/2.0;
-    NSArray *btnArr = @[@"返回",@"企业订单",@"业务员订单"];
+    NSArray *btnArr = @[@"企业订单",@"业务员订单"];
     float widht = ZJYDeviceWidth/btnArr.count;
-    _selimgeView = [UIImageView new];
-    _selimgeView.contentMode = UIViewContentModeScaleToFill;
-    _selimgeView.image = [UIImage imageNamed:@"Navigation_Greenbottom"];
-    [headBtnView addSubview:_selimgeView];
-    _selimgeView.clipsToBounds = YES;
-    headBtnView.clipsToBounds =YES;
-    [_selimgeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(widht +50);
-        make.centerX.offset(0);
-        make.height.equalTo(headBtnView.mas_height).offset(5);
-        make.top.offset(-2);
-    }];
     for (int i = 0; i < btnArr.count; i ++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         [headBtnView addSubview:btn];
@@ -92,12 +138,102 @@
         [headBtnView addSubview:btn];
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(widht*i);
-            make.width.equalTo(headBtnView.mas_width).dividedBy(3);
+            make.width.equalTo(headBtnView.mas_width).dividedBy(2);
             make.height.equalTo(headBtnView.mas_height);
         }];
         btn.tag = 10+i;
         [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-        btn.selected = i ==1;
+        btn.selected = i ==0;
+        if (i == 0) {
+            _currentbnt =btn;
+        }
+        btn.backgroundColor = btn.selected?ZJYColorHex(@"019944"):[UIColor clearColor];
+
+    }
+}
+
+#pragma mark - UITableViewDelegate,UITableViewDataSource
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == _productTable) {
+        return 40;
+    }
+    return 80;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    
+    return 0;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return CGFLOAT_MIN;
+}
+- (nullable UIView *)tableView:(UITableView *)tableView {
+    return nil;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == _productTable) {
+        [_productArr removeAllObjects];
+        [_productArr addObjectsFromArray:[_seriesArr[indexPath.row]productList]];
+        [_listTable reloadData];
+    }
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (tableView == _productTable) {
+        return _seriesArr.count;
+    }
+    return _productArr.count;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == _productTable) {
+        SeriesCell *cell = [tableView dequeueReusableCellWithIdentifier:@"_productTable"];
+        if (!cell) {
+            cell = [[SeriesCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"_productTable"];
+        }
+        [cell setModel:_seriesArr[indexPath.row]];
+        return cell;
+    }
+    ProductCell *pCell = [tableView dequeueReusableCellWithIdentifier:@"pCell"];
+    if (!pCell) {
+        pCell = [[ProductCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"pCell"];
+    }
+    [pCell setModel:_productArr[indexPath.row]];
+    return pCell;
+}
+
+#pragma mark - Action
+- (void)bottomAction:(UIButton *)sender{
+    switch (sender.tag ) {
+        case OrderBottomTypTemp:
+        {
+            
+        }break;
+        case OrderBottomTypHistory:
+        {
+            
+        }break;
+        case OrderBottomTypOrder:
+        {
+            float cout = 0;
+            for (SeriesModel *mode in _seriesArr) {
+                for (ProductModel *pModel in mode.productList) {
+                    if (pModel.count) {
+                        cout =1;
+                        break;
+                    }
+                }
+                if (cout) {
+                    break;
+                }
+            }
+            if (!cout) {
+                [AppAlertView showErrorMeesage:@"请选择商品"];
+                return;
+            }
+        }break;
+        default:
+            break;
     }
 }
 - (void)btnAction:(UIButton *)sender{
@@ -105,45 +241,10 @@
         return;
     }
     _currentbnt.selected = NO;
+    _currentbnt.backgroundColor = [UIColor clearColor];
     sender.selected = YES;
+    sender.backgroundColor = ZJYColorHex(@"019944");
     _currentbnt = sender;
-    float widht  = ZJYDeviceWidth/3.0;
-    switch (sender.tag -10) {
-        case 0:
-        {
-//            [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                make.width.mas_equalTo(widht  +50);
-//                make.left.offset(-30);
-//                make.height.equalTo(_headView.mas_height).offset(10);
-//                make.top.offset(-5);
-//            }];
-           
-        }break;
-        case 1:
-        {
-            _company.hidden = NO;
-            _personHistory.hidden = YES;
-            [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(widht );
-                make.centerX.offset(0);
-                make.height.equalTo(_headView.mas_height).offset(10);
-                make.top.offset(-5);
-            }];
-        }break;
-        case 2:
-        {
-            _company.hidden = YES;
-            _personHistory.hidden = NO;
-            [_selimgeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(widht+50 );
-                make.right.offset(30);
-                make.height.equalTo(_headView.mas_height).offset(10);
-                make.top.offset(-5);
-            }];
-        }break;
-        default:
-            break;
-    }
 }
 /*
 #pragma mark - Navigation
@@ -155,10 +256,23 @@
 }
 */
 - (void)requsetList{
-    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-        
+    //apps/order/queryOrderList
+    //apps/product/list
+    [_headView beginRefresh];
+    [[RequestManger sharedClient] GET:@"apps/product/list" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [_headView endRefresh];
+        [_seriesArr removeAllObjects];
+        [_productArr removeAllObjects];
+        for (NSDictionary *dic in responseObject[@"result"]) {
+            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+        }
+        if (_seriesArr.count) {
+            [_productArr addObjectsFromArray:[_seriesArr[0] productList]];
+        }
+        [_productTable reloadData];
+        [_listTable reloadData];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-        
+        [_headView endRefresh];
     }];
 }
 @end

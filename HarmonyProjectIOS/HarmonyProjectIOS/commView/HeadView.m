@@ -12,6 +12,7 @@
 {
     UILabel *_titleLabel;
     UIActivityIndicatorView *_indicatorV;
+    UIButton *_backBtn;
 }
 @end
 @implementation HeadView
@@ -20,6 +21,16 @@
     self = [super initWithFrame:CGRectMake(0, 0, ZJYDeviceWidth, 75 + safeTopHeight)];
     self.backgroundColor = ZJYColorHex(@"000000");
     if (self) {
+        _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_backBtn setImage:[UIImage imageNamed:@"back_arrow"] forState:UIControlStateNormal];
+        [self addSubview:_backBtn];
+        [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(15);
+            make.width.mas_equalTo(40);
+            make.height.mas_equalTo(40);
+            make.top.offset(safeTopHeight);
+        }];
         _titleLabel = [UILabel new];
         [self addSubview:_titleLabel];
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -42,16 +53,26 @@
     }
     return self;
 }
+- (void)setHiddenback:(BOOL)hiddenback{
+    _hiddenback = hiddenback;
+    _backBtn.hidden = YES;
+}
 - (void)beginRefresh{
     [_indicatorV startAnimating];
     _titleLabel.text = @"收取中...";
     _indicatorV.hidden = NO;
 
 }
+
 - (void)endRefresh{
     _titleLabel.text = self.title;
     _indicatorV.hidden = YES;
     [_indicatorV stopAnimating];
+}
+- (void)backAction:(id)sender{
+    if (self.backCallBack) {
+        self.backCallBack();
+    }
 }
 /*
 // Only override drawRect: if you perform custom drawing.

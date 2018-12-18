@@ -6,7 +6,8 @@ target 'HarmonyProjectIOS' do
   # use_frameworks!
     pod 'AFNetworking'
     pod 'Masonry'
-
+    pod 'MJExtension'
+    pod 'SDWebImage'
   # Pods for HarmonyProjectIOS
 
   target 'HarmonyProjectIOSTests' do

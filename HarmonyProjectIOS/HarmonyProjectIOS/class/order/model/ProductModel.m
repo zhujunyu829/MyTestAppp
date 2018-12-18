@@ -7,19 +7,15 @@
 //
 
 #import "ProductModel.h"
-
+@implementation SeriesModel
++ (NSDictionary *)mj_objectClassInArray
+{
+    return @{@"productList" : [ProductModel class]};
+}
+@end
 @implementation ProductModel
 
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        int i = arc4random()%100;
-        self.name = [NSString stringWithFormat:@"叼嘴巴%d",i];
-        self.money = 3*i;
-        self.count = i;
-    }
-    return self;
-}
+
 
 
 @end

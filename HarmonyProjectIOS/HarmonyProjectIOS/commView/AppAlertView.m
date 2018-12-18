@@ -101,6 +101,21 @@
     }
     [self removeFromSuperview];
 }
+
++ (void)showErrorMeesage:(NSString *)message{
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
+    hud.userInteractionEnabled = NO;
+    hud.removeFromSuperViewOnHide = YES;
+    [[UIApplication sharedApplication].keyWindow addSubview:hud];
+    hud.labelText = message;
+    hud.mode = MBProgressHUDModeText;
+    [hud show:YES];
+    
+//    [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES].labelText = message ;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    });
+}
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

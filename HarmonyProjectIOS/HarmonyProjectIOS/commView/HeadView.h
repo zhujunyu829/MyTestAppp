@@ -12,8 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HeadView : UIView
 
-@property (nonnull, copy) NSString *title;
-
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, assign) BOOL hiddenback;
+@property (nonatomic, copy) voidBlock backCallBack;
 - (void)beginRefresh;
 - (void)endRefresh;
 

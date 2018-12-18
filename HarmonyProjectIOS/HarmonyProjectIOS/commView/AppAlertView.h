@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showTitle:(NSString *)title confirm:(voidBlock)confirm cancel:(voidBlock)cancel;
 - (void)show;
 - (void)showMessage:(NSString *)message;
+
++ (void)showErrorMeesage:(NSString *)message;
 @end
 
 NS_ASSUME_NONNULL_END

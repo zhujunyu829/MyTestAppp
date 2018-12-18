@@ -45,8 +45,7 @@ typedef void(^voidBlock) (void);
 #define ZJYSYFont(size) [UIFont systemFontOfSize:size]
 #define ZJYSYWidthFitFont(size) [UIFont systemFontOfSize:ZJYDeviceWidth>320?size:(size-1)]
 
-#define ZJYBodyFont(size) ZJYsystemVersion<9.0?ZJYBodyFontWidthFitFont(size):ZJYBodyFontWidthFitFont(size-1)
-#define ZJYBodyFontWidthFitFont(size) [UIFont boldSystemFontOfSize:ZJYDeviceWidth>320?size:(size-2)]
+#define ZJYBodyFont(size) [UIFont boldSystemFontOfSize:size]
 
 static const int  OpenSettings_Tag = 1001110;
 

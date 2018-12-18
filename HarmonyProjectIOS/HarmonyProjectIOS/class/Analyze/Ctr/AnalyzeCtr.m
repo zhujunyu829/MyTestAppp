@@ -25,6 +25,7 @@
 }
 - (void)configHeadView{
     _headView = [HeadView new];
+    _headView.hiddenback = YES;
     [self.view addSubview:_headView];
 }
 

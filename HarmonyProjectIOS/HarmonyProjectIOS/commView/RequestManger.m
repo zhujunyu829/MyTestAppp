@@ -20,6 +20,7 @@
     dispatch_once(&onceToken, ^{
         
         _sharedClient = [RequestManger new];
+
     });
     
     return _sharedClient;
@@ -28,7 +29,8 @@
     self = [super init];
     if (self) {
         _manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:APPURL]];
-
+        _manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        _manager.responseSerializer  = [AFJSONResponseSerializer serializer];
     }
     return self;
 }
@@ -62,8 +64,18 @@
     [_manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        success(task,responseObject);
+        if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
+            success(task,responseObject);
+        }else{
+            NSString *message = responseObject[@"message"];
+            if (message) {
+                [AppAlertView showErrorMeesage:message];
+            }
+            failure(task,[NSError new]);
+        }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [AppAlertView showErrorMeesage:@"服务器异常"];
+
         failure(task,error);
     }];
 }

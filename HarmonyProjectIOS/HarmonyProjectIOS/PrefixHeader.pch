@@ -14,10 +14,13 @@
 #import "AppMacro.h"
 #import "UIView+KGViewExtend.h"
 #import "masonry.h"
+#import "MBProgressHUD.h"
 #import "HeadView.h"
 #import "AppAlertView.h"
 #import "AFNetworking.h"
 #import "RequestManger.h"
+#import "MJExtension.h"
+#import "UIImageView+WebCache.h"
 
 #endif
 // Include any system framework and library headers here that should be included in all compilation units.

@@ -28,6 +28,8 @@
 }
 - (void)configHeadView{
     _headView = [HeadView new];
+    _headView.hiddenback = YES;
+
     [self.view addSubview:_headView];
 }
 
@@ -133,6 +135,8 @@
   
 }
 - (void)logOutAction{
+    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:tokenKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     LoginCtr *ctr = [LoginCtr new];
     [UIApplication sharedApplication].keyWindow.rootViewController = ctr;
 }
