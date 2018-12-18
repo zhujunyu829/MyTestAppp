@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, assign) BOOL hiddenback;
 @property (nonatomic, copy) voidBlock backCallBack;
+@property (nonatomic, copy) voidBlock homeCallBack;
+
 - (void)beginRefresh;
 - (void)endRefresh;
 

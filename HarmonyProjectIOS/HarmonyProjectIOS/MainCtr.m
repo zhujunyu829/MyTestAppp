@@ -26,12 +26,18 @@
     self.view.backgroundColor =ZJYColorHex(@"00ccff");
     self.navigationController.navigationBarHidden = YES;
     UITabBarController *tab = [[UITabBarController alloc] init];
-    tab.viewControllers =@[[AnalyzeCtr new],[OrderCtr new],[PersonCtr new]];
+    
+    tab.viewControllers =@[[self changeNav:[AnalyzeCtr new]],[self changeNav:[OrderCtr new]],[self changeNav:[PersonCtr new]]];
     [self.view addSubview:tab.view];
     tab.selectedIndex = 1;
     _tab = tab;
     [self configBtn];
     // Do any additional setup after loading the view.
+}
+- (UIViewController *)changeNav:(UIViewController *)ctr{
+    UINavigationController *nave = [[UINavigationController alloc] initWithRootViewController:ctr];
+    nave.navigationBarHidden = YES;
+    return nave;
 }
 - (void)configBtn{
     _tabV = [[UIView alloc] init];

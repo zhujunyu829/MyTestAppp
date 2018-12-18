@@ -1,5 +1,5 @@
 //
-//  ConfirmOrderCtr.h
+//  ConfirmOrderCell.h
 //  HarmonyProjectIOS
 //
 //  Created by feng on 2018/12/18.
@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class ProductModel;
+@interface ConfirmOrderCell : UITableViewCell
 
-@interface ConfirmOrderCtr : UIViewController
-
-@property (nonatomic, retain) NSMutableArray *dataArr;
+- (void)setModel:(ProductModel *)model;
 @end
 
 NS_ASSUME_NONNULL_END

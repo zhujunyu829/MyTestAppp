@@ -13,6 +13,7 @@
     UILabel *_titleLabel;
     UIActivityIndicatorView *_indicatorV;
     UIButton *_backBtn;
+    UIButton *_rightBtn;
 }
 @end
 @implementation HeadView
@@ -25,18 +26,31 @@
         [_backBtn setImage:[UIImage imageNamed:@"back_arrow"] forState:UIControlStateNormal];
         [self addSubview:_backBtn];
         [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
-        [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.offset(15);
-            make.width.mas_equalTo(40);
-            make.height.mas_equalTo(40);
-            make.top.offset(safeTopHeight);
-        }];
+     
+        
+        _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_rightBtn setImage:[UIImage imageNamed:@"huidaosouye"] forState:UIControlStateNormal];
+        [self addSubview:_rightBtn];
+        [_rightBtn addTarget:self action:@selector(rightAction:) forControlEvents:UIControlEventTouchUpInside];
+       
         _titleLabel = [UILabel new];
         [self addSubview:_titleLabel];
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.offset(0);
             make.bottom.offset(-15);
             
+        }];
+        [_rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.offset(-15);
+            make.width.mas_equalTo(40);
+            make.height.mas_equalTo(40);
+            make.centerY.equalTo(_titleLabel.mas_centerY);
+        }];
+        [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(15);
+            make.width.mas_equalTo(40);
+            make.height.mas_equalTo(40);
+            make.centerY.equalTo(_titleLabel.mas_centerY);
         }];
         _titleLabel.text = @"收取中...";
         _titleLabel.font = ZJYSYFont(18);
@@ -72,6 +86,11 @@
 - (void)backAction:(id)sender{
     if (self.backCallBack) {
         self.backCallBack();
+    }
+}
+- (void)rightAction:(id)sender{
+    if (self.homeCallBack) {
+        self.homeCallBack();
     }
 }
 /*

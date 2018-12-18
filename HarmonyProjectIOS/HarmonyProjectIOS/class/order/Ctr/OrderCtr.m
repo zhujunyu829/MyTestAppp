@@ -7,10 +7,12 @@
 //
 
 #import "OrderCtr.h"
-#import "HistoryView.h"
 #import "ProductModel.h"
 #import "ProductCell.h"
 #import "SeriesCell.h"
+#import "ConfirmOrderCtr.h"
+#import "HistoryCtr.h"
+
 typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     OrderBottomTypTemp =10,
     OrderBottomTypHistory,
@@ -211,26 +213,27 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         }break;
         case OrderBottomTypHistory:
         {
-            
+            HistoryCtr *ctr = [HistoryCtr new];
+            [self.navigationController pushViewController:ctr animated:YES];
         }break;
         case OrderBottomTypOrder:
         {
-            float cout = 0;
+            NSMutableArray*arr = [NSMutableArray new];
             for (SeriesModel *mode in _seriesArr) {
                 for (ProductModel *pModel in mode.productList) {
                     if (pModel.count) {
-                        cout =1;
-                        break;
+                        [arr addObject:pModel];
                     }
                 }
-                if (cout) {
-                    break;
-                }
+                
             }
-            if (!cout) {
+            if (!arr.count) {
                 [AppAlertView showErrorMeesage:@"请选择商品"];
                 return;
             }
+            ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
+            ctr.dataArr = arr;
+            [self.navigationController pushViewController:ctr animated:YES];
         }break;
         default:
             break;
