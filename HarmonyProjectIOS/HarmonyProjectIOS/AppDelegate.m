@@ -10,6 +10,10 @@
 #import "MainCtr.h"
 #import "LoginCtr.h"
 @interface AppDelegate ()
+{
+    
+}
+@property (nonatomic, strong) NSTimer               *refreshLoginTimer;//刷新登陆timer
 
 @end
 
@@ -22,6 +26,7 @@
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self cheakLogin];
+    [self startRefreshLoginTimer];
     [self.window makeKeyWindow];
     return YES;
 }
@@ -41,6 +46,27 @@
         [self.window makeKeyAndVisible];
     }
 }
+
+- (void) startRefreshLoginTimer
+{
+    //每3分钟刷新一次登录
+    if (!self.refreshLoginTimer)
+    {
+        self.refreshLoginTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(refreshLogin) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)refreshLogin
+{
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:tokenKey];
+    if (token && token.length) {
+        [[RequestManger sharedClient] cheakHeartbeat];
+    }else{
+        [self.refreshLoginTimer invalidate];
+    }
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

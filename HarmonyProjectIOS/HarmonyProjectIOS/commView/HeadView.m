@@ -19,7 +19,7 @@
 @implementation HeadView
 
 - (instancetype)init{
-    self = [super initWithFrame:CGRectMake(0, 0, ZJYDeviceWidth, 75 + safeTopHeight)];
+    self = [super initWithFrame:CGRectMake(0, 0, ZJYDeviceWidth, 44 + safeTopHeight)];
     self.backgroundColor = ZJYColorHex(@"000000");
     if (self) {
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -34,6 +34,9 @@
         [_rightBtn addTarget:self action:@selector(rightAction:) forControlEvents:UIControlEventTouchUpInside];
        
         _titleLabel = [UILabel new];
+        _titleLabel.text = @"收取中...";
+        _titleLabel.font = ZJYSYFont(18);
+        _titleLabel.textColor = [UIColor whiteColor];
         [self addSubview:_titleLabel];
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.offset(0);
@@ -52,9 +55,7 @@
             make.height.mas_equalTo(40);
             make.centerY.equalTo(_titleLabel.mas_centerY);
         }];
-        _titleLabel.text = @"收取中...";
-        _titleLabel.font = ZJYSYFont(18);
-        _titleLabel.textColor = [UIColor whiteColor];
+       
         _indicatorV  = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     
         [self addSubview:_indicatorV];
@@ -70,6 +71,10 @@
 - (void)setHiddenback:(BOOL)hiddenback{
     _hiddenback = hiddenback;
     _backBtn.hidden = YES;
+}
+- (void)setHiddenRightback:(BOOL)hiddenRightback{
+    _hiddenRightback = hiddenRightback;
+    _rightBtn.hidden = YES;
 }
 - (void)beginRefresh{
     [_indicatorV startAnimating];

@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
 
+- (void)cheakHeartbeat; 
+
 @end
 
 NS_ASSUME_NONNULL_END

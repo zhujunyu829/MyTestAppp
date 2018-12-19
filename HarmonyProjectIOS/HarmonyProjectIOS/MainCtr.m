@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor =ZJYColorHex(@"00ccff");
+    self.view.backgroundColor =ZJYColorHex(@"ffffff");
     self.navigationController.navigationBarHidden = YES;
     UITabBarController *tab = [[UITabBarController alloc] init];
     
@@ -43,6 +43,7 @@
     _tabV = [[UIView alloc] init];
     _tabV.height = 50;
     _tabV.width = ZJYDeviceWidth;
+    
     _tabV.top = _tab.tabBar.top - safeBottomHeight;
     [_tab.view addSubview:_tabV];
     _tabV.backgroundColor = [UIColor whiteColor];

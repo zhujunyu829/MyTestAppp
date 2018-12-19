@@ -175,6 +175,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     if (tableView == _productTable) {
         [_productArr removeAllObjects];
         [_productArr addObjectsFromArray:[_seriesArr[indexPath.row]productList]];
+        _listTable.contentOffset = CGPointZero;
         [_listTable reloadData];
     }
 }
@@ -274,6 +275,9 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         }
         [_productTable reloadData];
         [_listTable reloadData];
+        NSIndexPath *firstPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [_productTable selectRowAtIndexPath:firstPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];
     }];

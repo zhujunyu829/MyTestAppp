@@ -9,9 +9,10 @@
 #ifndef AppMacro_h
 #define AppMacro_h
 #import "UIColor+RGB.h"
+#import "UIView+KGViewExtend.h"
 
-#define safeTopHeight 20
-#define safeBottomHeight 34
+#define safeTopHeight [UIView safeAreaInset].top
+#define safeBottomHeight [UIView safeAreaInset].bottom
 #define AppTextColor  ZJYColorHex(@"#4C4948")
 #define tokenKey @"token"
 /**

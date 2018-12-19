@@ -70,5 +70,5 @@
  */
 @property (nonatomic) CGFloat centerY;
 
-@property (nonatomic, readonly) UIEdgeInsets safeAreaInset;
++ (UIEdgeInsets)safeAreaInset;
 @end

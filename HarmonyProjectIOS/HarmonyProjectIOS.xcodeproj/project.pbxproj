@@ -44,6 +44,8 @@
 		D94B557121C8CECD00EC817B /* ProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D94B557021C8CECD00EC817B /* ProductCell.m */; };
 		D94B557421C8CEFA00EC817B /* SeriesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D94B557321C8CEFA00EC817B /* SeriesCell.m */; };
 		D94B557721C9127E00EC817B /* ConfirmOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D94B557621C9127E00EC817B /* ConfirmOrderCell.m */; };
+		D95C927921C9DE2300D6C4E7 /* HistoryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D95C927821C9DE2300D6C4E7 /* HistoryModel.m */; };
+		D95C927C21C9E57700D6C4E7 /* GLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95C927B21C9E57700D6C4E7 /* GLineView.m */; };
 		D9C895DE21C7491F003D0AF0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C895DD21C7491F003D0AF0 /* AppDelegate.m */; };
 		D9C895E121C7491F003D0AF0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C895E021C7491F003D0AF0 /* ViewController.m */; };
 		D9C895E421C7491F003D0AF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9C895E221C7491F003D0AF0 /* Main.storyboard */; };
@@ -66,7 +68,6 @@
 		D9C8963E21C74DC8003D0AF0 /* AppAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8963D21C74DC8003D0AF0 /* AppAlertView.m */; };
 		D9C8964321C77627003D0AF0 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964221C77627003D0AF0 /* ProductModel.m */; };
 		D9C8964921C77FC9003D0AF0 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964821C77FC9003D0AF0 /* HistoryCell.m */; };
-		D9C8964C21C784C1003D0AF0 /* OrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964B21C784C1003D0AF0 /* OrderModel.m */; };
 		EE9ADF6780DD8FD0EC51117D /* libPods-HarmonyProjectIOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 961AA5287D969D99E9487C01 /* libPods-HarmonyProjectIOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,10 @@
 		D94B557321C8CEFA00EC817B /* SeriesCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeriesCell.m; sourceTree = "<group>"; };
 		D94B557521C9127E00EC817B /* ConfirmOrderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfirmOrderCell.h; sourceTree = "<group>"; };
 		D94B557621C9127E00EC817B /* ConfirmOrderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfirmOrderCell.m; sourceTree = "<group>"; };
+		D95C927721C9DE2300D6C4E7 /* HistoryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryModel.h; sourceTree = "<group>"; };
+		D95C927821C9DE2300D6C4E7 /* HistoryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryModel.m; sourceTree = "<group>"; };
+		D95C927A21C9E57700D6C4E7 /* GLineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLineView.h; sourceTree = "<group>"; };
+		D95C927B21C9E57700D6C4E7 /* GLineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLineView.m; sourceTree = "<group>"; };
 		D9C895D921C7491F003D0AF0 /* HarmonyProjectIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HarmonyProjectIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C895DC21C7491F003D0AF0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D9C895DD21C7491F003D0AF0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -189,8 +194,6 @@
 		D9C8964221C77627003D0AF0 /* ProductModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductModel.m; sourceTree = "<group>"; };
 		D9C8964721C77FC9003D0AF0 /* HistoryCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryCell.h; sourceTree = "<group>"; };
 		D9C8964821C77FC9003D0AF0 /* HistoryCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryCell.m; sourceTree = "<group>"; };
-		D9C8964A21C784C1003D0AF0 /* OrderModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderModel.h; sourceTree = "<group>"; };
-		D9C8964B21C784C1003D0AF0 /* OrderModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,16 +438,16 @@
 		D9C8961F21C74975003D0AF0 /* category */ = {
 			isa = PBXGroup;
 			children = (
-				D9C8962021C74975003D0AF0 /* UIView+capture.m */,
-				D9C8962121C74975003D0AF0 /* UIColor+RGB.h */,
-				D9C8962221C74975003D0AF0 /* NSDictionary+CheakValue.m */,
-				D9C8962321C74975003D0AF0 /* UIIamge+FixOrien.m */,
-				D9C8962421C74975003D0AF0 /* UIView+KGViewExtend.m */,
 				D9C8962521C74975003D0AF0 /* NSDictionary+CheakValue.h */,
+				D9C8962221C74975003D0AF0 /* NSDictionary+CheakValue.m */,
+				D9C8962121C74975003D0AF0 /* UIColor+RGB.h */,
 				D9C8962621C74975003D0AF0 /* UIColor+RGB.m */,
-				D9C8962721C74975003D0AF0 /* UIView+capture.h */,
 				D9C8962821C74975003D0AF0 /* UIIamge+FixOrien.h */,
+				D9C8962321C74975003D0AF0 /* UIIamge+FixOrien.m */,
+				D9C8962721C74975003D0AF0 /* UIView+capture.h */,
+				D9C8962021C74975003D0AF0 /* UIView+capture.m */,
 				D9C8962921C74975003D0AF0 /* UIView+KGViewExtend.h */,
+				D9C8962421C74975003D0AF0 /* UIView+KGViewExtend.m */,
 			);
 			path = category;
 			sourceTree = "<group>";
@@ -452,14 +455,16 @@
 		D9C8962B21C74975003D0AF0 /* commView */ = {
 			isa = PBXGroup;
 			children = (
-				D9C8962C21C74975003D0AF0 /* HeadView.h */,
-				D9C8962D21C74975003D0AF0 /* HeadView.m */,
 				D9C8963C21C74DC8003D0AF0 /* AppAlertView.h */,
 				D9C8963D21C74DC8003D0AF0 /* AppAlertView.m */,
-				584EA69121C7D3BF00AE3F1F /* RequestManger.h */,
-				584EA69221C7D3BF00AE3F1F /* RequestManger.m */,
 				D94B556C21C885FC00EC817B /* BottomBtnView.h */,
 				D94B556D21C885FC00EC817B /* BottomBtnView.m */,
+				D9C8962C21C74975003D0AF0 /* HeadView.h */,
+				D9C8962D21C74975003D0AF0 /* HeadView.m */,
+				584EA69121C7D3BF00AE3F1F /* RequestManger.h */,
+				584EA69221C7D3BF00AE3F1F /* RequestManger.m */,
+				D95C927A21C9E57700D6C4E7 /* GLineView.h */,
+				D95C927B21C9E57700D6C4E7 /* GLineView.m */,
 			);
 			path = commView;
 			sourceTree = "<group>";
@@ -492,8 +497,8 @@
 			children = (
 				D9C8964121C77627003D0AF0 /* ProductModel.h */,
 				D9C8964221C77627003D0AF0 /* ProductModel.m */,
-				D9C8964A21C784C1003D0AF0 /* OrderModel.h */,
-				D9C8964B21C784C1003D0AF0 /* OrderModel.m */,
+				D95C927721C9DE2300D6C4E7 /* HistoryModel.h */,
+				D95C927821C9DE2300D6C4E7 /* HistoryModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -718,7 +723,6 @@
 				D9C8963B21C74975003D0AF0 /* MainCtr.m in Sources */,
 				D94B557121C8CECD00EC817B /* ProductCell.m in Sources */,
 				D9C895EC21C74924003D0AF0 /* main.m in Sources */,
-				D9C8964C21C784C1003D0AF0 /* OrderModel.m in Sources */,
 				D9C8963721C74975003D0AF0 /* UIIamge+FixOrien.m in Sources */,
 				D9C8963521C74975003D0AF0 /* UIView+capture.m in Sources */,
 				D94B556B21C8855000EC817B /* ConfirmOrderCtr.m in Sources */,
@@ -729,6 +733,7 @@
 				D94B556E21C885FC00EC817B /* BottomBtnView.m in Sources */,
 				D94B556821C8852A00EC817B /* HistoryCtr.m in Sources */,
 				D9C8963A21C74975003D0AF0 /* HeadView.m in Sources */,
+				D95C927C21C9E57700D6C4E7 /* GLineView.m in Sources */,
 				D9C8963221C74975003D0AF0 /* PersonCtr.m in Sources */,
 				D9C8963921C74975003D0AF0 /* UIColor+RGB.m in Sources */,
 				584EA6B921C7E7BA00AE3F1F /* MBProgressHUD.m in Sources */,
@@ -738,6 +743,7 @@
 				D94B557421C8CEFA00EC817B /* SeriesCell.m in Sources */,
 				D9C8963121C74975003D0AF0 /* OrderCtr.m in Sources */,
 				584EA6C521C7E7BA00AE3F1F /* MBProgressHUD+LJ.m in Sources */,
+				D95C927921C9DE2300D6C4E7 /* HistoryModel.m in Sources */,
 				D9C895DE21C7491F003D0AF0 /* AppDelegate.m in Sources */,
 				D9C8963E21C74DC8003D0AF0 /* AppAlertView.m in Sources */,
 				D9C8963621C74975003D0AF0 /* NSDictionary+CheakValue.m in Sources */,
@@ -918,13 +924,15 @@
 			baseConfigurationReference = A14A8D0BAFF2C422FAF74104 /* Pods-HarmonyProjectIOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LN5Z4LQL2H;
 				INFOPLIST_FILE = HarmonyProjectIOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = harmony.com.cn.HarmonyProjectIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = "-12harmony.com.cn.HarmonyProjectIOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -935,13 +943,15 @@
 			baseConfigurationReference = 2F1CDD018531F9782067FB65 /* Pods-HarmonyProjectIOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LN5Z4LQL2H;
 				INFOPLIST_FILE = HarmonyProjectIOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = harmony.com.cn.HarmonyProjectIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = "-12harmony.com.cn.HarmonyProjectIOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

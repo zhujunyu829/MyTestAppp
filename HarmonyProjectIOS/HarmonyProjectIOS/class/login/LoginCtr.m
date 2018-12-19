@@ -30,6 +30,8 @@
 - (void)configHeadView{
     _headView = [HeadView new];
     _headView.title = @"登陆";
+    _headView.hiddenback = YES;
+    _headView.hiddenRightback = YES;
     [_headView endRefresh];
     [self.view addSubview:_headView];
 }
@@ -60,6 +62,7 @@
     [_senderBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
     [_senderBtn setTitleColor:AppTextColor forState:UIControlStateNormal];
     _senderBtn.titleLabel.font = ZJYSYFont(14);
+    _senderBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
     _senderBtn.layer.masksToBounds = YES;
     _senderBtn.layer.borderColor = ZJYColorHex(@"#A7A8A8").CGColor;
     _senderBtn.layer.borderWidth = 1;

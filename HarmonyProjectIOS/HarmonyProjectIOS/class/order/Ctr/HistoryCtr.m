@@ -7,12 +7,14 @@
 //
 
 #import "HistoryCtr.h"
+#import "HistoryModel.h"
+#import "HistoryCell.h"
 
 @interface HistoryCtr ()<UITableViewDelegate,UITableViewDataSource>
 {
     HeadView *_headView;
     UITableView *_table;
-
+    NSMutableArray *_dataArr;
 }
 @end
 
@@ -20,13 +22,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _dataArr = [NSMutableArray new];
     [self configHeadView];
     [self configTable];
+    [self requsetList];
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
     _headView = [HeadView new];
-    _headView.title =@"商城";
+    _headView.title =@"历史订单";
     DefineWeakSelf(weakSelf);
     _headView.backCallBack = ^{
         [weakSelf backAction];
@@ -55,14 +59,17 @@
 
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 0;
+    HistoryModel *model = _dataArr[indexPath.section];
+
+    return model.sourceHeight + model.neworderHeight;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     
     return 30;
 }
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    HistoryModel *model = _dataArr[section];
+    
     UIView *headView = [UIView new];
     headView.width = tableView.width;
     headView.height = 30;
@@ -71,7 +78,7 @@
     UILabel *textLabel = [UILabel new];
     textLabel.font = ZJYSYFont(14);
     textLabel.textColor = ZJYColorHex(@"#4C4948");
-    textLabel.text = @"12月17日";
+    textLabel.text = model.orderDate;
     textLabel.left = 15;
     textLabel.height = headView.height;
     textLabel.width = 120;
@@ -85,12 +92,30 @@
     return 1;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 10;
+    return _dataArr.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    return [UITableViewCell new];
+    HistoryCell * cell = [tableView dequeueReusableCellWithIdentifier:@"HistoryCell"];
+    if (!cell) {
+        cell = [[HistoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HistoryCell"];
+    }
+    [cell setModel:_dataArr[indexPath.row]];
+    return cell;
+}
+//apps/order/queryOrderList
+
+- (void)requsetList{
+    //apps/order/queryOrderList
+    //apps/product/list
+    [_headView beginRefresh];
+    [[RequestManger sharedClient] GET:@"apps/order/queryOrderList" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [_headView endRefresh];
+        [_dataArr removeAllObjects];
+        [_dataArr addObjectsFromArray:[HistoryModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"]]];
+        [_table reloadData];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
+    }];
 }
 /*
 #pragma mark - Navigation

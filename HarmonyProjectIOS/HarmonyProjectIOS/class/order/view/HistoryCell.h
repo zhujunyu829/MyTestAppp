@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class HistoryModel;
 @interface HistoryCell : UITableViewCell
 
+- (void)setModel:(HistoryModel *)model;
 @end
 
 NS_ASSUME_NONNULL_END

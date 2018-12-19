@@ -7,6 +7,8 @@
 //
 
 #import "RequestManger.h"
+#import "LoginCtr.h"
+
 @interface RequestManger(){
     AFHTTPSessionManager *_manager;
 }
@@ -61,7 +63,7 @@
     if (token && token.length) {
         [_manager.requestSerializer setValue:token?:@"" forHTTPHeaderField:@"Authentication-Key"];
     }
-    [_manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+    [_manager GET:url parameters:parameters?:@{} progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
@@ -74,9 +76,38 @@
             failure(task,[NSError new]);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (error.code == 3840) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:tokenKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            LoginCtr *ctr = [LoginCtr new];
+            [UIApplication sharedApplication].keyWindow.rootViewController = ctr;
+            return ;
+        }
         [AppAlertView showErrorMeesage:@"服务器异常"];
-
+        
         failure(task,error);
     }];
+}
+
+- (void)cheakHeartbeat{
+    NSString *url = [NSString stringWithFormat:@"%@%@",APPURL,@"apps/user/heartbeat"];
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:tokenKey];
+    if (token && token.length) {
+        [_manager.requestSerializer setValue:token?:@"" forHTTPHeaderField:@"Authentication-Key"];
+    }
+    [_manager GET:url parameters:@{} progress:^(NSProgress * _Nonnull downloadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"---->%@",responseObject);
+        if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
+        }else{
+            NSString *message = responseObject[@"message"];
+            if (message) {
+                [AppAlertView showErrorMeesage:message];
+            }
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    }];
+   
 }
 @end

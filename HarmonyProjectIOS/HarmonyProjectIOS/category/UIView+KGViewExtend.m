@@ -119,7 +119,7 @@
     self.frame = frame;
 }
 
-- (UIEdgeInsets)safeAreaInset{
++ (UIEdgeInsets)safeAreaInset{
     if (@available(iOS 11.0, *)) {
         
         return [UIApplication sharedApplication].keyWindow.safeAreaInsets;
