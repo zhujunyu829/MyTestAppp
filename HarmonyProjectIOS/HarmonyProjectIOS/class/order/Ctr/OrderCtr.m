@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     UITableView *_listTable;//系列列表
     NSMutableArray *_seriesArr;
     NSMutableArray *_productArr;
+    NSMutableArray *_useTemplateArr;
 }
 @end
 
@@ -41,9 +42,10 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     [self configTable];
     _productArr = [NSMutableArray new];
     _seriesArr = [NSMutableArray new];
+    _useTemplateArr  = [NSMutableArray new];
     self.view.backgroundColor = [UIColor whiteColor];
     [self requsetList];
-   
+    [self requsetuseTemplate];
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
@@ -51,6 +53,11 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     _headView.title =@"商城";
     _headView.hiddenback = YES;
     [_headView endRefresh];
+    DefineWeakSelf(weakSelf);
+    _headView.homeCallBack = ^{
+        [weakSelf requsetList];
+        [weakSelf requsetuseTemplate];
+    };
     [self.view addSubview:_headView];
 }
 
@@ -210,7 +217,13 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     switch (sender.tag ) {
         case OrderBottomTypTemp:
         {
-            
+            if (!_useTemplateArr.count) {
+                [AppAlertView showErrorMeesage:@"没获取到模版"];
+                return;
+            }
+            ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
+            ctr.dataArr = _useTemplateArr;
+            [self.navigationController pushViewController:ctr animated:YES];
         }break;
         case OrderBottomTypHistory:
         {
@@ -221,12 +234,21 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         {
             NSMutableArray*arr = [NSMutableArray new];
             for (SeriesModel *mode in _seriesArr) {
+                NSMutableArray *pMoelArr = [NSMutableArray new];
                 for (ProductModel *pModel in mode.productList) {
                     if (pModel.count) {
-                        [arr addObject:pModel];
+                        [pMoelArr addObject:pModel];
                     }
                 }
-                
+                if (pMoelArr.count) {
+                    SeriesModel *newM = [SeriesModel new];
+                    newM.seriesName = mode.seriesName;
+                    newM.seriesCode = mode.seriesCode;
+                    newM.seriesCount = mode.seriesCount;
+                    newM.productList = pMoelArr;
+                    [arr addObject:newM];
+                }
+               
             }
             if (!arr.count) {
                 [AppAlertView showErrorMeesage:@"请选择商品"];
@@ -280,6 +302,15 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];
+    }];
+}
+- (void)requsetuseTemplate{
+    //apps/order/useTemplate
+    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+       
+        [_useTemplateArr removeAllObjects];
+        [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
     }];
 }
 @end

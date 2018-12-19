@@ -11,8 +11,8 @@
 #import "ProductModel.h"
 
 typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
-    ConfirmOrderBottomTypTemp =10,
-    ConfirmOrderBottomTypHistory,
+    ConfirmOrderBottomTypSaveTemp =10,
+    ConfirmOrderBottomTypTemp,
     ConfirmOrderBottomTypOrder
 };
 @interface ConfirmOrderCtr ()<UITableViewDelegate,UITableViewDataSource>
@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     UIView *_noticeView;
     UIButton *_confirmBtn;
     UIView *_countView;
+    NSMutableArray *_useTemplateArr;
+
 }
 @end
 
@@ -33,6 +35,8 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     [self configBottomBtn];
     [self configNoticeView];
     [self configTable];
+    [self configCountView];
+    _useTemplateArr = [NSMutableArray new];
     self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view.
 }
@@ -96,7 +100,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
         [btn setTitle:btnArr[i] forState:UIControlStateNormal];
         [btn setTitleColor:ZJYColorHex(@"595757") forState:UIControlStateNormal];
         btn.backgroundColor = ZJYColorHex(@"ffffff");
-        btn.tag = ConfirmOrderBottomTypTemp+i;
+        btn.tag = ConfirmOrderBottomTypSaveTemp+i;
         [btn addTarget:self action:@selector(bottomAction:) forControlEvents:UIControlEventTouchUpInside];
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(width *i -1);
@@ -126,6 +130,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     _table.dataSource = self;
     _table.tableFooterView = [UIView new];
     _table.backgroundColor = [UIColor clearColor];
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
     [_table mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_noticeView.mas_bottom);
@@ -138,7 +143,22 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
 - (void)backAction{
     [self.navigationController popViewControllerAnimated:YES];
 }
-
+- (void)bottomAction:(UIButton *)sender{
+    switch (sender.tag ) {
+        case ConfirmOrderBottomTypTemp:
+        {
+            [self requsetuseTemplate];
+        }break;
+        case ConfirmOrderBottomTypSaveTemp:
+        {
+            [self saveTemplate];
+        }break;
+        case ConfirmOrderBottomTypOrder:
+        {
+            
+        }break;
+    }
+}
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -146,29 +166,85 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     
-    return CGFLOAT_MIN;
+    return 30;
 }
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    return nil;
+    SeriesModel *model = self.dataArr[section];
+
+    UIView *headView = [UIView new];
+    headView.width = tableView.width;
+    headView.height = 30;
+    headView.backgroundColor = ZJYColorHex(@"#D7D7D7");
+    
+    UILabel *textLabel = [UILabel new];
+    textLabel.font = ZJYSYFont(14);
+    textLabel.textColor = ZJYColorHex(@"#4C4948");
+    textLabel.text = model.seriesName;
+    textLabel.left = 15;
+    textLabel.height = headView.height;
+    textLabel.width = 120;
+    [headView addSubview:textLabel];
+    return headView;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.dataArr.count;
+    SeriesModel *model = self.dataArr[section];
+    
+    return model.productList.count;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 1;
+    return self.dataArr.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ConfirmOrderCell *cell =[tableView dequeueReusableCellWithIdentifier:@"ConfirmOrderCell"];
     if (!cell) {
         cell = [[ConfirmOrderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ConfirmOrderCell"];
     }
-    [cell setModel:_dataArr[indexPath.row]];
+    SeriesModel *model = self.dataArr[indexPath.section];
+    [cell setModel:model.productList[indexPath.row]];
     return cell;
     
     return [UITableViewCell new];
+}
+#pragma mark- requset
+- (void)requsetuseTemplate{
+    //apps/order/useTemplate
+    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        
+        [_useTemplateArr removeAllObjects];
+        [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+    }];
+}
+- (void)saveTemplate{
+    //apps/order/savecollect?qbpostcheckkey=154520371003
+    NSMutableArray *list = [NSMutableArray new];
+    for (SeriesModel *sModel in self.dataArr) {
+        for (ProductModel *m in sModel.productList ) {
+            NSLog(@"%@",m.mj_keyValues);
+            NSMutableDictionary *dic = m.mj_keyValues;
+            [dic setObject:m.remark?:@"999" forKey:@"remark"];
+            [dic setObject:m.remark?:@"" forKey:@"packageRemark"];
+
+            [dic removeObjectForKey:@"count"];
+
+            [list addObject:dic];
+        }
+    }
+//    NSError *error ;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:list
+//                                                       options:kNilOptions
+//                                                         error:&error];
+//
+//    NSString *jsonString = [[NSString alloc] initWithData:jsonData
+//                                                 encoding:NSUTF8StringEncoding];
+    [[RequestManger sharedClient] POST:@"apps/order/savecollect" parameters:@{@"list":list} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
+    }];
 }
 /*
 #pragma mark - Navigation

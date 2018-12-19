@@ -45,6 +45,7 @@
     _table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _table.delegate =self;
     _table.dataSource = self;
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
     [_table mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);

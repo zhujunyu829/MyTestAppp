@@ -146,6 +146,7 @@
     [_imageView sd_setImageWithURL:[NSURL URLWithString:imgeUrl]];
     _model = model;
     _countField.text = [NSString stringWithFormat:@"%d",_model.count];
+    _desView.text = _model.remark;
     
 }
 
@@ -167,5 +168,20 @@
         return NO;
     }
     return YES;
+}
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    _model.remark = textView.text;
+}
+- (void)desBtnAction:(id)sender{
+    if (_model.count < 0) {
+        return;
+    }
+    _model.count--;
+    _countField.text = [NSString stringWithFormat:@"%d",_model.count];
+}
+- (void)addBtnAction:(id)sender{
+    _model.count ++;
+    _countField.text = [NSString stringWithFormat:@"%d",_model.count];
+    
 }
 @end

@@ -55,7 +55,7 @@
     line2.bottom = _phone.bottom;
     _password.top = line2.bottom;
     line3.bottom = _password.bottom;
-    _phone.text = @"18684868001";
+    _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _senderBtn.width = 80;
     _senderBtn.height = _password.height - 20;

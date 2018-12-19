@@ -15,7 +15,10 @@
 @end
 @implementation ProductModel
 
-
+- (void)setCount:(int)count{
+    _count = count;
+    self.numbers = [NSNumber numberWithInt:count];
+}
 
 
 @end

@@ -46,7 +46,7 @@
     if (token && token.length) {
         [_manager.requestSerializer setValue:token?:@"" forHTTPHeaderField:@"Authentication-Key"];
     }
-    [_manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+    [_manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         success(task, responseObject);
