@@ -70,6 +70,8 @@
 		D9C8964921C77FC9003D0AF0 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C8964821C77FC9003D0AF0 /* HistoryCell.m */; };
 		D9E2948421CB38C400312F52 /* RegisterCtr.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E2948321CB38C400312F52 /* RegisterCtr.m */; };
 		D9E2948721CB3DB200312F52 /* NSString+Cheak.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E2948621CB3DB200312F52 /* NSString+Cheak.m */; };
+		D9E2948921CB6AC100312F52 /* userNotice.docx in Resources */ = {isa = PBXBuildFile; fileRef = D9E2948821CB6AC100312F52 /* userNotice.docx */; };
+		D9E2948C21CB6ADD00312F52 /* UserNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E2948B21CB6ADD00312F52 /* UserNotice.m */; };
 		EE9ADF6780DD8FD0EC51117D /* libPods-HarmonyProjectIOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 961AA5287D969D99E9487C01 /* libPods-HarmonyProjectIOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -200,6 +202,9 @@
 		D9E2948321CB38C400312F52 /* RegisterCtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RegisterCtr.m; sourceTree = "<group>"; };
 		D9E2948521CB3DB200312F52 /* NSString+Cheak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Cheak.h"; sourceTree = "<group>"; };
 		D9E2948621CB3DB200312F52 /* NSString+Cheak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Cheak.m"; sourceTree = "<group>"; };
+		D9E2948821CB6AC100312F52 /* userNotice.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = userNotice.docx; sourceTree = "<group>"; };
+		D9E2948A21CB6ADD00312F52 /* UserNotice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserNotice.h; sourceTree = "<group>"; };
+		D9E2948B21CB6ADD00312F52 /* UserNotice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserNotice.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,10 +440,13 @@
 		D9C8961B21C74975003D0AF0 /* login */ = {
 			isa = PBXGroup;
 			children = (
+				D9E2948821CB6AC100312F52 /* userNotice.docx */,
 				D9C8961D21C74975003D0AF0 /* LoginCtr.h */,
 				D9C8961C21C74975003D0AF0 /* LoginCtr.m */,
 				D9E2948221CB38C400312F52 /* RegisterCtr.h */,
 				D9E2948321CB38C400312F52 /* RegisterCtr.m */,
+				D9E2948A21CB6ADD00312F52 /* UserNotice.h */,
+				D9E2948B21CB6ADD00312F52 /* UserNotice.m */,
 			);
 			path = login;
 			sourceTree = "<group>";
@@ -619,6 +627,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9E2948921CB6AC100312F52 /* userNotice.docx in Resources */,
 				584EA6C721C7E7BA00AE3F1F /* gif_loading10.png in Resources */,
 				584EA6CC21C7E7BA00AE3F1F /* gif_loading9.png in Resources */,
 				584EA6BF21C7E7BA00AE3F1F /* gif_loading9@2x.png in Resources */,
@@ -740,6 +749,7 @@
 				D9E2948721CB3DB200312F52 /* NSString+Cheak.m in Sources */,
 				D94B557721C9127E00EC817B /* ConfirmOrderCell.m in Sources */,
 				D9C8963821C74975003D0AF0 /* UIView+KGViewExtend.m in Sources */,
+				D9E2948C21CB6ADD00312F52 /* UserNotice.m in Sources */,
 				584EA6CD21C7E7BA00AE3F1F /* GiFHUD.m in Sources */,
 				584EA69321C7D3BF00AE3F1F /* RequestManger.m in Sources */,
 				D94B556E21C885FC00EC817B /* BottomBtnView.m in Sources */,

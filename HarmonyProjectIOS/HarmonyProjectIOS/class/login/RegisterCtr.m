@@ -8,7 +8,7 @@
 
 #import "RegisterCtr.h"
 #import "MainCtr.h"
-
+#import "UserNotice.h"
 @interface RegisterCtr ()
 {
     HeadView *_headView;
@@ -89,7 +89,7 @@
     UIButton *logOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:logOutBtn];
     logOutBtn.backgroundColor = ZJYColorHex(@"#019944");
-    [logOutBtn setTitle:@"注册并登陆" forState:UIControlStateNormal];
+    [logOutBtn setTitle:@"注册并登录" forState:UIControlStateNormal];
     [logOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [logOutBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,7 +98,17 @@
         make.centerX.offset(0);
         make.top.equalTo(_password.mas_bottom).offset(30);
     }];
-    
+    UIButton *wechatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:wechatBtn];
+    [wechatBtn setTitle:@"点击‘注册并登录’即同意《用户须知》" forState:UIControlStateNormal];
+    [wechatBtn setTitleColor:ZJYColorHex(@"#019944") forState:UIControlStateNormal];
+    wechatBtn.titleLabel.font = ZJYSYFont(12);
+    [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(20);
+        make.centerX.offset(0);
+        make.top.equalTo(logOutBtn.mas_bottom).offset(10);
+    }];
+    [wechatBtn addTarget:self action:@selector(weichatAction:) forControlEvents:UIControlEventTouchUpInside];
    
     [logOutBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     [_senderBtn addTarget:self action:@selector(sentCodeAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -182,7 +192,10 @@
 - (void)backAction{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+- (void)weichatAction:(id)sender{
+    UserNotice *ctr = [UserNotice new];
+    [self presentViewController:ctr animated:YES completion:nil];
+}
 - (void)sentCodeAction:(id)sener{
     NSString *phone = _phone.text;
     if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {

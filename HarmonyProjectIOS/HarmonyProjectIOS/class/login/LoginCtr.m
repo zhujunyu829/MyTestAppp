@@ -29,7 +29,7 @@
 }
 - (void)configHeadView{
     _headView = [HeadView new];
-    _headView.title = @"登陆";
+    _headView.title = @"登录";
     _headView.hiddenback = YES;
     _headView.hiddenRightback = YES;
     [_headView endRefresh];

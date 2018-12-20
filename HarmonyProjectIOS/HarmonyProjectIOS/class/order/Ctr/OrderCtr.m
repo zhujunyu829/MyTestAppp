@@ -45,7 +45,6 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     _useTemplateArr  = [NSMutableArray new];
     self.view.backgroundColor = [UIColor whiteColor];
     [self requsetList];
-    [self requsetuseTemplate];
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
@@ -56,7 +55,6 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     DefineWeakSelf(weakSelf);
     _headView.homeCallBack = ^{
         [weakSelf requsetList];
-        [weakSelf requsetuseTemplate];
     };
     [self.view addSubview:_headView];
 }
@@ -217,13 +215,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     switch (sender.tag ) {
         case OrderBottomTypTemp:
         {
-            if (!_useTemplateArr.count) {
-                [AppAlertView showErrorMeesage:@"没获取到模版"];
-                return;
-            }
-            ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
-            ctr.dataArr = _useTemplateArr;
-            [self.navigationController pushViewController:ctr animated:YES];
+            [self requsetuseTemplate];
         }break;
         case OrderBottomTypHistory:
         {
@@ -306,11 +298,23 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
 }
 - (void)requsetuseTemplate{
     //apps/order/useTemplate
+    [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-       
+        [_headView endRefresh];
         [_useTemplateArr removeAllObjects];
         [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+        [self enterTemplate];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
     }];
+}
+- (void)enterTemplate{
+    if (!_useTemplateArr.count) {
+        [AppAlertView showErrorMeesage:@"没获取到模版"];
+        return;
+    }
+    ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
+    ctr.dataArr = _useTemplateArr;
+    [self.navigationController pushViewController:ctr animated:YES];
 }
 @end

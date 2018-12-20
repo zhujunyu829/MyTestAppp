@@ -225,8 +225,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
         for (ProductModel *m in sModel.productList ) {
             NSLog(@"%@",m.mj_keyValues);
             NSMutableDictionary *dic = m.mj_keyValues;
-            [dic setObject:m.remark?:@"999" forKey:@"remark"];
-            [dic setObject:m.numbers forKey:@"piece"];
+            [dic setObject:@(m.count) forKey:@"piece"];
             [dic removeObjectForKey:@"count"];
             [list addObject:dic];
         }
