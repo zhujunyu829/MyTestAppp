@@ -109,7 +109,7 @@
     //apps/order/queryOrderList
     //apps/product/list
     [_headView beginRefresh];
-    [[RequestManger sharedClient] GET:@"apps/order/queryOrderList" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [[RequestManger sharedClient] GET:@"apps/order/queryOrderList" parameters:@{}  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
         [_dataArr removeAllObjects];
         [_dataArr addObjectsFromArray:[HistoryModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"]]];

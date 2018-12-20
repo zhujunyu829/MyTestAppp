@@ -36,9 +36,22 @@
     }
     return self;
 }
-
 - (void )POST:(NSString *)URLString
    parameters:(id)parameters
+      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure{
+    [self POST:URLString parameters:parameters showMessage:YES success:success failure:failure];
+}
+- (void )GET:(NSString *)URLString
+  parameters:(id)parameters
+     success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+     failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure{
+    [self GET:URLString parameters:parameters showMessage:YES success:success failure:failure];
+
+}
+- (void )POST:(NSString *)URLString
+   parameters:(id)parameters
+  showMessage:(BOOL)show
       success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
       failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure{
     NSString *url = [NSString stringWithFormat:@"%@%@",APPURL,URLString];
@@ -50,7 +63,7 @@
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *message = responseObject[@"message"];
-        if (message) {
+        if (show && message) {
             [AppAlertView showErrorMeesage:message];
         }
         if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
@@ -73,6 +86,7 @@
 }
 - (void )GET:(NSString *)URLString
   parameters:(id)parameters
+ showMessage:(BOOL)show
      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure{
     NSString *url = [NSString stringWithFormat:@"%@%@",APPURL,URLString];
@@ -84,7 +98,7 @@
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *message = responseObject[@"message"];
-        if (message) {
+        if (show && message) {
             [AppAlertView showErrorMeesage:message];
         }
         if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {

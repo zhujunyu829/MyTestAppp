@@ -135,7 +135,7 @@
 }
 #pragma mark - action
 - (void)desBtnAction:(id)sender{
-    if (_model.count < 0) {
+    if (_model.count < 1) {
         return;
     }
     _model.count--;

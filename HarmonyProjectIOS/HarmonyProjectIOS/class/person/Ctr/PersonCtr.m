@@ -164,7 +164,7 @@
     //apps/user/findUser
     [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"apps/user/findUser" parameters:@{
-                                                                      }
+                                                                      } showMessage:NO
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                   NSDictionary *result = responseObject[@"result"];
                                   [_headView endRefresh];

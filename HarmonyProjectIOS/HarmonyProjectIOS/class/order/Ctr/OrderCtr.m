@@ -246,9 +246,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
                 [AppAlertView showErrorMeesage:@"请选择商品"];
                 return;
             }
-            ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
-            ctr.dataArr = arr;
-            [self.navigationController pushViewController:ctr animated:YES];
+            [self addShoppingCart:arr];
         }break;
         default:
             break;
@@ -277,7 +275,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     //apps/order/queryOrderList
     //apps/product/list
     [_headView beginRefresh];
-    [[RequestManger sharedClient] GET:@"apps/product/list" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [[RequestManger sharedClient] GET:@"apps/product/list" parameters:@{}  showMessage:NO success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
         [_seriesArr removeAllObjects];
         [_productArr removeAllObjects];
@@ -294,6 +292,27 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];
+    }];
+}
+
+- (void)addShoppingCart:(NSArray *)arr{
+    ///apps/order/addShoppingCart
+    
+    NSMutableArray *list = [NSMutableArray new];
+    for (SeriesModel *sModel in arr) {
+        for (ProductModel *m in sModel.productList ) {
+            NSLog(@"%@",m.mj_keyValues);
+            NSMutableDictionary *dic = m.mj_keyValues;
+            [dic setObject:@(m.count) forKey:@"piece"];
+            [dic removeObjectForKey:@"count"];
+            [list addObject:dic];
+        }
+    }
+    DefineWeakSelf(weakSelf);
+    [[RequestManger sharedClient] POST:@"apps/order/addShoppingCart" parameters:list  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [weakSelf enterConfirmOrder:arr];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
     }];
 }
 - (void)requsetuseTemplate{
@@ -313,8 +332,12 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [AppAlertView showErrorMeesage:@"没获取到模版"];
         return;
     }
+    [self addShoppingCart:_useTemplateArr];
+}
+- (void)enterConfirmOrder:(NSArray *)arr{
     ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
-    ctr.dataArr = _useTemplateArr;
+    ctr.dataArr = arr;
     [self.navigationController pushViewController:ctr animated:YES];
 }
+
 @end

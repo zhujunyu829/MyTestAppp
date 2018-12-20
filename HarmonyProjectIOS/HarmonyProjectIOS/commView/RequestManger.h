@@ -14,13 +14,25 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RequestManger : NSObject
 + (instancetype)sharedClient;
 - (void )POST:(NSString *)URLString
-                    parameters:(id)parameters
-                       success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
-                       failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+   parameters:(id)parameters
+  showMessage:(BOOL)show
+      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
 - (void )GET:(NSString *)URLString
-                   parameters:(id)parameters
-                      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
-                      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+  parameters:(id)parameters
+ showMessage:(BOOL)show
+     success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+     failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+
+- (void )POST:(NSString *)URLString
+   parameters:(id)parameters
+      success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+      failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+- (void )GET:(NSString *)URLString
+  parameters:(id)parameters
+     success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+     failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+
 - (void )TokenPOST:(NSString *)URLString
    parameters:(id)parameters
       success:(void (^)(NSURLSessionDataTask *task, id responseObject))success

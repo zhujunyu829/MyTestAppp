@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ProductModel;
 @interface ConfirmOrderCell : UITableViewCell
 
+@property (nonatomic , copy) voidBlock valueChange;
 - (void)setModel:(ProductModel *)model;
 @end
 

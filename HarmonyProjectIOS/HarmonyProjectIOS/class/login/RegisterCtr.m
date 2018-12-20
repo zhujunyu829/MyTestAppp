@@ -100,7 +100,7 @@
     }];
     UIButton *wechatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:wechatBtn];
-    [wechatBtn setTitle:@"点击‘注册并登录’即同意《用户须知》" forState:UIControlStateNormal];
+    [wechatBtn setTitle:@"点击‘注册并登录’即代表同意《注册用户须知》" forState:UIControlStateNormal];
     [wechatBtn setTitleColor:ZJYColorHex(@"#019944") forState:UIControlStateNormal];
     wechatBtn.titleLabel.font = ZJYSYFont(12);
     [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {

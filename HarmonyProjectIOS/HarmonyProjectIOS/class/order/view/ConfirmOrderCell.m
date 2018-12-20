@@ -160,6 +160,9 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     _model.count = [textField.text intValue];
+    if (self.valueChange) {
+        self.valueChange();
+    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -171,17 +174,23 @@
 }
 - (void)textViewDidEndEditing:(UITextView *)textView{
     _model.remark = textView.text;
+ 
 }
 - (void)desBtnAction:(id)sender{
-    if (_model.count < 0) {
+    if (_model.count < 1) {
         return;
     }
     _model.count--;
     _countField.text = [NSString stringWithFormat:@"%d",_model.count];
+    if (self.valueChange) {
+        self.valueChange();
+    }
 }
 - (void)addBtnAction:(id)sender{
     _model.count ++;
     _countField.text = [NSString stringWithFormat:@"%d",_model.count];
-    
+    if (self.valueChange) {
+        self.valueChange();
+    }
 }
 @end
