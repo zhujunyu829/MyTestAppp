@@ -8,6 +8,7 @@ target 'HarmonyProjectIOS' do
     pod 'Masonry'
     pod 'MJExtension'
     pod 'SDWebImage'
+    pod 'WechatOpenSDK'
   # Pods for HarmonyProjectIOS
 
   target 'HarmonyProjectIOSTests' do

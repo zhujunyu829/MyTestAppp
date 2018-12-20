@@ -9,7 +9,9 @@
 #import "LoginCtr.h"
 #import "MainCtr.h"
 #import "RegisterCtr.h"
-@interface LoginCtr ()<UITextFieldDelegate>
+#import "WXApi.h"
+
+@interface LoginCtr ()<UITextFieldDelegate,WXApiDelegate>
 {
     HeadView *_headView;
     UITextField *_phone;
@@ -179,7 +181,21 @@
     [self presentViewController:ctr animated:YES completion:nil];
 }
 - (void)weichatAction:(id)sener{
+//    if (![WXApi isWXAppInstalled])
+//    {
+//        SendAuthReq* req =[[SendAuthReq alloc ] init];
+//        req.scope = @"snsapi_userinfo";
+//        req.state = @"pedometer_binding";
+//        BOOL succeed = [WXApi sendAuthReq:req viewController:self delegate:self];
+//        if (succeed) {
+//            NSLog(@"点击了微信按钮，跳转到网页登录");
+//        }
+//        return;
+//    }
+    SendAuthReq *request = [[SendAuthReq alloc]init];
+    request.scope = @"snsapi_userinfo";
     
+    [WXApi sendAuthReq:request viewController:self delegate:self];
 }
 
 
@@ -230,6 +246,22 @@
     dispatch_resume(_timer);
 }
 
+
+-(void) onReq:(BaseReq*)req{
+    
+}
+
+
+
+/*! @brief 发送一个sendReq后，收到微信的回应
+ *
+ * 收到一个来自微信的处理结果。调用一次sendReq后会收到onResp。
+ * 可能收到的处理结果有SendMessageToWXResp、SendAuthResp等。
+ * @param resp具体的回应内容，是自动释放的
+ */
+-(void) onResp:(BaseResp*)resp{
+    
+}
 /*
 #pragma mark - Navigation
 

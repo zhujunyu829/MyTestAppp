@@ -19,7 +19,7 @@
 @implementation HeadView
 
 - (instancetype)init{
-    self = [super initWithFrame:CGRectMake(0, 0, ZJYDeviceWidth, 44 + safeTopHeight)];
+    self = [super initWithFrame:CGRectMake(0, 0, ZJYDeviceWidth, 64 + safeTopHeight)];
     self.backgroundColor = ZJYColorHex(@"000000");
     if (self) {
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];

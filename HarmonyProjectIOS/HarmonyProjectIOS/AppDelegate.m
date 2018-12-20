@@ -9,7 +9,12 @@
 #import "AppDelegate.h"
 #import "MainCtr.h"
 #import "LoginCtr.h"
-@interface AppDelegate ()
+#import "WXApi.h"
+#import "BangDingCtr.h"
+
+#define wxAppID @"wx76200bd38be01432"
+#define wxSecret @"513f888727b34d81c57a6a55e897c978"
+@interface AppDelegate ()<WXApiDelegate>
 {
     
 }
@@ -23,7 +28,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
+    [WXApi registerApp:wxAppID ];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self cheakLogin];
     [self startRefreshLoginTimer];
@@ -92,6 +97,32 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
-
+//return [WXApi handleOpenURL:url delegate:self];
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [WXApi handleOpenURL:url delegate:self];
+}
+-(void) onResp:(BaseResp*)resp{
+    
+    SendAuthResp *res = (SendAuthResp*)resp;
+    NSString *urlString = [NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code", wxAppID, wxSecret, res.code];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSData *responseData = [NSData dataWithContentsOfURL:url];
+    NSError *error;
+    NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                 options:NSJSONReadingAllowFragments
+                                                                   error:&error];
+  
+    NSLog(@"responseDic = %@", responseDic);
+    
+    [self weichatOpenID:responseDic[@"openid"]];
+}
+- (void)weichatOpenID:(NSString *)openID{
+    
+    [[RequestManger sharedClient] GET:@"apps/user/validOpenId" parameters:@{@"openId":openID?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
+    }];
+}
 @end
