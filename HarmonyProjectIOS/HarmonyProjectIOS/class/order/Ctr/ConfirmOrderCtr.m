@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
         }break;
         case ConfirmOrderBottomTypOrder:
         {
-            
+            [self saveOrder];
         }break;
     }
 }
@@ -218,6 +218,35 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
     }];
 }
+- (void)saveOrder{
+    //apps/order/confirmOrder
+    NSMutableArray *list = [NSMutableArray new];
+    for (SeriesModel *sModel in self.dataArr) {
+        for (ProductModel *m in sModel.productList ) {
+            NSLog(@"%@",m.mj_keyValues);
+            NSMutableDictionary *dic = m.mj_keyValues;
+            [dic setObject:m.remark?:@"999" forKey:@"remark"];
+            [dic setObject:m.numbers forKey:@"piece"];
+            [dic removeObjectForKey:@"count"];
+            [list addObject:dic];
+        }
+    }
+    //    NSError *error ;
+    //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:list
+    //                                                       options:kNilOptions
+    //                                                         error:&error];
+    //
+    //    NSString *jsonString = [[NSString alloc] initWithData:jsonData
+    //                                                 encoding:NSUTF8StringEncoding];
+    [[RequestManger sharedClient] POST:@"apps/order/confirmOrder" parameters:list success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
+    }];
+}
+- (void)changeOrder{
+    //apps/order/addShoppingCart?qbpostcheckkey=1545281999269
+}
 - (void)saveTemplate{
     //apps/order/savecollect?qbpostcheckkey=154520371003
     NSMutableArray *list = [NSMutableArray new];
@@ -226,10 +255,8 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
             NSLog(@"%@",m.mj_keyValues);
             NSMutableDictionary *dic = m.mj_keyValues;
             [dic setObject:m.remark?:@"999" forKey:@"remark"];
-            [dic setObject:m.remark?:@"" forKey:@"packageRemark"];
-
+            [dic setObject:m.numbers forKey:@"piece"];
             [dic removeObjectForKey:@"count"];
-
             [list addObject:dic];
         }
     }
@@ -240,7 +267,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
 //
 //    NSString *jsonString = [[NSString alloc] initWithData:jsonData
 //                                                 encoding:NSUTF8StringEncoding];
-    [[RequestManger sharedClient] POST:@"apps/order/savecollect" parameters:@{@"list":list} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [[RequestManger sharedClient] POST:@"apps/order/savecollect" parameters:list success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         

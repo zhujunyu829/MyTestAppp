@@ -49,8 +49,25 @@
     [_manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        success(task, responseObject);
+        NSString *message = responseObject[@"message"];
+        if (message) {
+            [AppAlertView showErrorMeesage:message];
+        }
+        if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
+            success(task,responseObject);
+        }else{
+            failure(task,[NSError new]);
+        }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (error.code == 3840) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:tokenKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            LoginCtr *ctr = [LoginCtr new];
+            [UIApplication sharedApplication].keyWindow.rootViewController = ctr;
+            return ;
+        }
+        [AppAlertView showErrorMeesage:@"服务器异常"];
+        
         failure(task,error);
     }];
 }
@@ -66,13 +83,14 @@
     [_manager GET:url parameters:parameters?:@{} progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *message = responseObject[@"message"];
+        if (message) {
+            [AppAlertView showErrorMeesage:message];
+        }
         if ([responseObject isKindOfClass:[NSDictionary class]] && [responseObject[@"code"] intValue] == 1) {
             success(task,responseObject);
         }else{
-            NSString *message = responseObject[@"message"];
-            if (message) {
-                [AppAlertView showErrorMeesage:message];
-            }
+           
             failure(task,[NSError new]);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
