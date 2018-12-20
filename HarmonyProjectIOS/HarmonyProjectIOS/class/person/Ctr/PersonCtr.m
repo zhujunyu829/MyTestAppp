@@ -14,6 +14,7 @@
     HeadView *_headView;
     UILabel *_nameLabel;
     UISwitch *_switch;
+
 }
 @end
 
@@ -25,6 +26,10 @@
     [self configHeadView];
     [self confiView];
     // Do any additional setup after loading the view.
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self getData];
 }
 - (void)configHeadView{
     _headView = [HeadView new];
@@ -50,7 +55,7 @@
     _nameLabel.font = ZJYSYFont(14);
     _nameLabel.textColor = ZJYColorHex(@"#4C4948");
     _nameLabel.textAlignment = NSTextAlignmentCenter;
-    _nameLabel.text = @"经销商";
+    _nameLabel.text = @"/";
     float width = ZJYDeviceWidth - 115;
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(title.mas_right).offset(10);
@@ -80,6 +85,7 @@
     }];
     noticeLable.text = @"授权电脑端下单";
     _switch = [[UISwitch alloc] init];
+    [_switch addTarget:self action:@selector(swithcValueChange:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_switch];
     [_switch mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(noticeLable.mas_centerY);
@@ -134,11 +140,42 @@
     }];
   
 }
+- (void)swithcValueChange:(UISwitch *)swthc{
+    //apps/user/changeSwitch?pcSwitch=1
+    [[RequestManger sharedClient] GET:@"apps/user/changeSwitch" parameters:@{@"pcSwitch":@(_switch.on)
+                                                                         }
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                                  NSDictionary *result = responseObject[@"result"];
+                                  
+                                 
+                                  
+                              }
+                              failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                  
+                              }];
+}
 - (void)logOutAction{
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:tokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     LoginCtr *ctr = [LoginCtr new];
     [UIApplication sharedApplication].keyWindow.rootViewController = ctr;
+}
+- (void)getData{
+    //apps/user/findUser
+    [_headView beginRefresh];
+    [[RequestManger sharedClient] GET:@"apps/user/findUser" parameters:@{
+                                                                      }
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                                  NSDictionary *result = responseObject[@"result"];
+                                  [_headView endRefresh];
+                                  _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"dealersName"]];
+                                  _switch.on = [result[@"isPcOrder"] intValue];
+                                  
+                              }
+                              failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                                                          
+                                                                      }];
+    
 }
 /*
 #pragma mark - Navigation

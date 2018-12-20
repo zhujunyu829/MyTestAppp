@@ -70,11 +70,11 @@
 }
 - (void)setHiddenback:(BOOL)hiddenback{
     _hiddenback = hiddenback;
-    _backBtn.hidden = YES;
+    _backBtn.hidden = hiddenback;
 }
 - (void)setHiddenRightback:(BOOL)hiddenRightback{
     _hiddenRightback = hiddenRightback;
-    _rightBtn.hidden = YES;
+    _rightBtn.hidden = hiddenRightback;
 }
 - (void)beginRefresh{
     [_indicatorV startAnimating];

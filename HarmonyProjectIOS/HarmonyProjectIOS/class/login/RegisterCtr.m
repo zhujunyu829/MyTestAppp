@@ -1,24 +1,26 @@
 //
-//  LoginCtr.m
-//  SaleApp
+//  RegisterCtr.m
+//  HarmonyProjectIOS
 //
-//  Created by zjy on 2018/12/16.
-//  Copyright © 2018年 hechangqiye. All rights reserved.
+//  Created by feng on 2018/12/20.
+//  Copyright © 2018 harmony. All rights reserved.
 //
 
-#import "LoginCtr.h"
-#import "MainCtr.h"
 #import "RegisterCtr.h"
-@interface LoginCtr ()<UITextFieldDelegate>
+#import "MainCtr.h"
+
+@interface RegisterCtr ()
 {
     HeadView *_headView;
     UITextField *_phone;
     UITextField *_password;
+    UITextField *_name;
     UIButton *_senderBtn;
 }
 @end
 
-@implementation LoginCtr
+@implementation RegisterCtr
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,33 +30,47 @@
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
+    DefineWeakSelf(weakSelf);
     _headView = [HeadView new];
-    _headView.title = @"登陆";
-    _headView.hiddenback = YES;
+    _headView.title = @"注册";
     _headView.hiddenRightback = YES;
+    _headView.backCallBack = ^{
+        [weakSelf backAction];
+    };
     [_headView endRefresh];
     [self.view addSubview:_headView];
 }
 - (void)confiView{
     _phone = [self fieldWithLeftTitle:@"手机号码"];
     [self.view addSubview:_phone];
+    
+    _name = [self fieldWithLeftTitle:@"用户名"];
+    [self.view addSubview:_name];
+    
     _password = [self fieldWithLeftTitle:@"验证码"];
     [self.view addSubview:_password];
+    
+    
     
     UIView *line1 = [self getLine];
     [self.view addSubview:line1];
     
     UIView *line2 = [self getLine];
     [self.view addSubview:line2];
-    
+   
     UIView *line3 = [self getLine];
     [self.view addSubview:line3];
+    
+    UIView *line4 = [self getLine];
+    [self.view addSubview:line4];
     
     line1.top = 20 +_headView.bottom;
     _phone.top = line1.bottom;
     line2.bottom = _phone.bottom;
-    _password.top = line2.bottom;
-    line3.bottom = _password.bottom;
+    _name.top = line2.bottom;
+    line3.bottom = _name.bottom;
+    _password.top = line3.bottom;
+    line4.top = _password.bottom;
     _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _senderBtn.width = 80;
@@ -69,11 +85,11 @@
     _senderBtn.layer.cornerRadius = 2;
     _password.rightViewMode = UITextFieldViewModeAlways;
     _password.rightView = _senderBtn;
-
+    
     UIButton *logOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:logOutBtn];
     logOutBtn.backgroundColor = ZJYColorHex(@"#019944");
-    [logOutBtn setTitle:@"登录" forState:UIControlStateNormal];
+    [logOutBtn setTitle:@"注册并登陆" forState:UIControlStateNormal];
     [logOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [logOutBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -83,33 +99,8 @@
         make.top.equalTo(_password.mas_bottom).offset(30);
     }];
     
-    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.view addSubview:registerBtn];
-    registerBtn.backgroundColor = ZJYColorHex(@"#019944");
-    [registerBtn setTitle:@"注册账号" forState:UIControlStateNormal];
-    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(self.view.mas_width).multipliedBy(0.8);
-        make.height.mas_equalTo(40);
-        make.centerX.offset(0);
-        make.top.equalTo(logOutBtn.mas_bottom).offset(30);
-    }];
-    
-    UIButton *wechatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.view addSubview:wechatBtn];
-    [wechatBtn setTitle:@"微信授权登录>" forState:UIControlStateNormal];
-    [wechatBtn setTitleColor:ZJYColorHex(@"#019944") forState:UIControlStateNormal];
-    wechatBtn.titleLabel.font = ZJYSYFont(12);
-    [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(20);
-        make.centerX.offset(0);
-        make.top.equalTo(registerBtn.mas_bottom).offset(10);
-    }];
-    [wechatBtn addTarget:self action:@selector(weichatAction:) forControlEvents:UIControlEventTouchUpInside];
+   
     [logOutBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
-    [registerBtn addTarget:self action:@selector(registerBtn:) forControlEvents:UIControlEventTouchUpInside];
-
     [_senderBtn addTarget:self action:@selector(sentCodeAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -154,18 +145,29 @@
 - (void)loginAction:(id)sener{
     NSString *phone = _phone.text;
     NSString *code = _password.text;
-    //apps/user/login?moble=18684868001&smsCode=940471
+    NSString *name = _name.text;
+    if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {
+        return;
+    }
+    if ([NSString cheakIsNull:name notice:@"请输入用户名"]) {
+        return;
+    }
+    if ([NSString cheakIsNull:code notice:@"请输入验证码"]) {
+        return;
+    }
+    //apps/user/regist?moble=1&name=1&smsCode=1
     DefineWeakSelf(weakSelf);
-    [[RequestManger sharedClient] GET:@"apps/user/login" parameters:@{@"moble":phone?:@"",
-                                                       @"smsCode":code?:@""
-                                                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                                                           NSString *token = responseObject[@"result"][@"tokenId"];
-                                                           [[NSUserDefaults standardUserDefaults] setObject:token?:@"" forKey:tokenKey];
-                                                           [[NSUserDefaults standardUserDefaults] synchronize];
-                                                           [weakSelf loginSuccess];
-                                                       } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-                                                           
-                                                       }];
+    [[RequestManger sharedClient] GET:@"apps/user/regist" parameters:@{@"moble":phone?:@"",
+                                                                       @"name":name?:@"",
+                                                                      @"smsCode":code?:@""
+                                                                      } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                                                                          NSString *token = responseObject[@"result"][@"tokenId"];
+                                                                          [[NSUserDefaults standardUserDefaults] setObject:token?:@"" forKey:tokenKey];
+                                                                          [[NSUserDefaults standardUserDefaults] synchronize];
+                                                                          [weakSelf loginSuccess];
+                                                                      } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                                                          
+                                                                      }];
     
 }
 - (void)loginSuccess{
@@ -174,23 +176,24 @@
     nav.navigationBarHidden = YES;
     [UIApplication sharedApplication].keyWindow.rootViewController = nav;
 }
-- (void)registerBtn:(id)sender{
-    RegisterCtr *ctr = [RegisterCtr new];
-    [self presentViewController:ctr animated:YES completion:nil];
-}
-- (void)weichatAction:(id)sener{
-    
-}
 
 
+
+- (void)backAction{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void)sentCodeAction:(id)sener{
     NSString *phone = _phone.text;
-    if (!phone || !phone.length) {
-        
+    if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {
         return;
     }
-    [[RequestManger sharedClient] GET:@"apps/user/getSmsCode" parameters:@{@"moble":phone?:@""
+    /*
+     0/apps/user/getRegistSmsCode?moble=13786143385
+     我的手机  10:47:53
+     00/apps/user/regist?moble=1&name=1&smsCode=1
+     */
+    [[RequestManger sharedClient] GET:@"apps/user/getRegistSmsCode" parameters:@{@"moble":phone?:@""
                                                                            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                                                                [AppAlertView showErrorMeesage:responseObject[@"message"]];
                                                                                [self startTime];
@@ -231,6 +234,15 @@
     dispatch_resume(_timer);
 }
 
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 /*
 #pragma mark - Navigation
 
