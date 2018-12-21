@@ -34,7 +34,8 @@
 - (void)configHeadView{
     _headView = [HeadView new];
     _headView.hiddenback = YES;
-
+    _headView.title = @"我的";
+    [_headView endRefresh];
     [self.view addSubview:_headView];
 }
 
@@ -162,12 +163,11 @@
 }
 - (void)getData{
     //apps/user/findUser
-    [_headView beginRefresh];
+//    [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"apps/user/findUser" parameters:@{
                                                                       } showMessage:NO
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                   NSDictionary *result = responseObject[@"result"];
-                                  [_headView endRefresh];
                                   _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"dealersName"]];
                                   _switch.on = [result[@"isPcOrder"] intValue];
                                   

@@ -537,6 +537,7 @@
 				D9C895D521C7491F003D0AF0 /* Sources */,
 				D9C895D621C7491F003D0AF0 /* Frameworks */,
 				D9C895D721C7491F003D0AF0 /* Resources */,
+				D3C569E88EB15A8DCCB012C3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -714,6 +715,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3C569E88EB15A8DCCB012C3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HarmonyProjectIOS/Pods-HarmonyProjectIOS-resources.sh",
+				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IQKeyboardManager.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HarmonyProjectIOS/Pods-HarmonyProjectIOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E5C07B6E3293675B0B64BF05 /* [CP] Check Pods Manifest.lock */ = {
@@ -954,7 +973,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LN5Z4LQL2H;
+				DEVELOPMENT_TEAM = UN84CTB8HQ;
 				INFOPLIST_FILE = HarmonyProjectIOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -962,7 +981,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = harmony.com.cn.HarmonyProjectIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -973,7 +992,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LN5Z4LQL2H;
+				DEVELOPMENT_TEAM = UN84CTB8HQ;
 				INFOPLIST_FILE = HarmonyProjectIOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -981,7 +1000,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = harmony.com.cn.HarmonyProjectIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

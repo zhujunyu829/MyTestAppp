@@ -18,6 +18,8 @@
     GLineView *_lineView;
     ProductModel *_model;
     UITextView *_desView;
+    UILabel         *_placeholderLable;
+
 }
 @end
 
@@ -60,12 +62,22 @@
         _desView = [UITextView new];
         [self.contentView addSubview:_desView];
         _desView.font = ZJYSYFont(15);
-        _desView.textAlignment = NSTextAlignmentCenter;
+        _desView.textAlignment = NSTextAlignmentLeft;
         _desView.layer.masksToBounds = YES;
         _desView.layer.borderColor = ZJYColorHex(@"#8B8B8B").CGColor;
         _desView.layer.borderWidth = 1;
         _desView.delegate = self;
         _desView.text = @"";
+        
+        _placeholderLable = [UILabel new];
+        _placeholderLable.font = ZJYSYFont(15);
+        _placeholderLable.text = @"备注:";
+        _placeholderLable.textColor = ZJYColorHex(@"D4D4D4");
+        _placeholderLable.width = [_placeholderLable sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+         _placeholderLable.height = [_placeholderLable sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
+        _placeholderLable.left = 4;
+        _placeholderLable.top = 10;
+        [_desView addSubview:_placeholderLable];
         
         _lineView = [GLineView new];
         //        _lineView.backgroundColor = ZJYColorHex(@"00ccff");
@@ -157,7 +169,10 @@
     }
     return YES;
 }
-
+- (void)textViewDidChange:(UITextView *)textView{
+    _placeholderLable.hidden = textView.text.length >=1;
+    
+}
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     _model.count = [textField.text intValue];
     if (self.valueChange) {

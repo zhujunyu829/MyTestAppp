@@ -33,6 +33,9 @@
     [self cheakLogin];
     [self startRefreshLoginTimer];
     [self.window makeKeyWindow];
+    IQKeyboardManager *keyboardManager = [IQKeyboardManager sharedManager]; // 获取类库的单例变量
+    keyboardManager.shouldResignOnTouchOutside = YES;
+     keyboardManager.enableAutoToolbar = NO; 
     return YES;
 }
 
@@ -118,11 +121,25 @@
     [self weichatOpenID:responseDic[@"openid"]];
 }
 - (void)weichatOpenID:(NSString *)openID{
-    
-    [[RequestManger sharedClient] GET:@"apps/user/validOpenId" parameters:@{@"openId":openID?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-        
+   
+    [[RequestManger sharedClient] GET:@"apps/user/validOpenId"  parameters:@{@"openId":openID?:@""} showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        NSString *token = responseObject[@"result"][@"tokenId"];
+        if (token) {
+            [[NSUserDefaults standardUserDefaults] setObject:token?:@"" forKey:tokenKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [self cheakLogin];
+        }else{
+             [self bangding:openID];
+        }
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-        
+        [self bangding:openID];
     }];
+}
+
+- (void)bangding:(NSString *)openID{
+    BangDingCtr *ctr = [BangDingCtr new];
+    ctr.openID = openID;
+    [self.window.rootViewController presentViewController:ctr animated:YES completion:nil];
+
 }
 @end

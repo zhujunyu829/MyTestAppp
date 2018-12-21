@@ -71,7 +71,7 @@
     line3.bottom = _name.bottom;
     _password.top = line3.bottom;
     line4.top = _password.bottom;
-    _phone.text = @"13786143385";
+//    _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _senderBtn.width = 80;
     _senderBtn.height = _password.height - 20;
@@ -89,7 +89,7 @@
     UIButton *logOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:logOutBtn];
     logOutBtn.backgroundColor = ZJYColorHex(@"#019944");
-    [logOutBtn setTitle:@"注册并登录" forState:UIControlStateNormal];
+    [logOutBtn setTitle:@"绑定并登录" forState:UIControlStateNormal];
     [logOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [logOutBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -108,7 +108,7 @@
         make.centerX.offset(0);
         make.top.equalTo(logOutBtn.mas_bottom).offset(10);
     }];
-    [wechatBtn addTarget:self action:@selector(weichatAction:) forControlEvents:UIControlEventTouchUpInside];
+   // [wechatBtn addTarget:self action:@selector(weichatAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [logOutBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     [_senderBtn addTarget:self action:@selector(sentCodeAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -173,7 +173,7 @@
                                                                        @"name":name?:@"",
                                                                        @"smsCode":code?:@""
                                                                        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                                                                           NSString *token = responseObject[@"result"][@"tokenId"];
+                                                                           NSString *token = responseObject[@"result"];
                                                                            [[NSUserDefaults standardUserDefaults] setObject:token?:@"" forKey:tokenKey];
                                                                            [[NSUserDefaults standardUserDefaults] synchronize];
                                                                            [weakSelf loginSuccess];

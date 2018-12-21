@@ -33,6 +33,7 @@
         _manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:APPURL]];
         _manager.requestSerializer = [AFJSONRequestSerializer serializer];
         _manager.responseSerializer  = [AFJSONResponseSerializer serializer];
+//        _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     }
     return self;
 }
@@ -139,6 +140,7 @@
             }
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"%@",error);
     }];
    
 }

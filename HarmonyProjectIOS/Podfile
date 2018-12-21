@@ -9,6 +9,7 @@ target 'HarmonyProjectIOS' do
     pod 'MJExtension'
     pod 'SDWebImage'
     pod 'WechatOpenSDK'
+    pod 'IQKeyboardManager'
   # Pods for HarmonyProjectIOS
 
   target 'HarmonyProjectIOSTests' do

@@ -17,6 +17,7 @@
     UITextField *_phone;
     UITextField *_password;
     UIButton *_senderBtn;
+
 }
 @end
 
@@ -24,18 +25,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configHeadView];
-    [self confiView];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view.
 }
 - (void)configHeadView{
+    
     _headView = [HeadView new];
     _headView.title = @"登录";
     _headView.hiddenback = YES;
     _headView.hiddenRightback = YES;
     [_headView endRefresh];
     [self.view addSubview:_headView];
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if (!_headView) {
+        [self configHeadView];
+        [self confiView];
+    }
+  
 }
 - (void)confiView{
     _phone = [self fieldWithLeftTitle:@"手机号码"];
@@ -57,7 +66,7 @@
     line2.bottom = _phone.bottom;
     _password.top = line2.bottom;
     line3.bottom = _password.bottom;
-    _phone.text = @"13786143385";
+//    _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _senderBtn.width = 80;
     _senderBtn.height = _password.height - 20;

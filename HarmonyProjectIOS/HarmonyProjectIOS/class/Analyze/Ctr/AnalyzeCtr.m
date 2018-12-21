@@ -26,7 +26,26 @@
 - (void)configHeadView{
     _headView = [HeadView new];
     _headView.hiddenback = YES;
+    _headView.title = @"数据分析";
+    [_headView endRefresh];
     [self.view addSubview:_headView];
+    UIImageView *iamggeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defuat"]];
+    [self.view addSubview:iamggeView];
+    [iamggeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_headView.mas_bottom).offset(50);
+        make.centerX.offset(0);
+    }];
+    UILabel *noticeLabel = [UILabel new];
+    [self.view addSubview:noticeLabel];
+    [noticeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.offset(0);
+        make.top.equalTo(iamggeView.mas_bottom).offset(10);
+    }];
+    noticeLabel.text = @"敬请期待";
+    noticeLabel.textColor = ZJYColorHex(@"949494");
+    noticeLabel.font = ZJYSYFont(15);
+    noticeLabel.textAlignment = NSTextAlignmentCenter;
+    
 }
 
 /*

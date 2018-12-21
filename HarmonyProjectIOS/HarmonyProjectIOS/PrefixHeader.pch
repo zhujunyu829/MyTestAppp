@@ -23,6 +23,7 @@
 #import "UIImageView+WebCache.h"
 #import "GLineView.h"
 #import "NSString+Cheak.h"
+#import "IQKeyboardManager.h"
 
 #endif
 // Include any system framework and library headers here that should be included in all compilation units.
