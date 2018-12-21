@@ -29,6 +29,9 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     NSMutableArray *_seriesArr;
     NSMutableArray *_productArr;
     NSMutableArray *_useTemplateArr;
+    NSMutableArray *_orderArr;
+    int _currentRow;
+    BOOL _isNext;
 }
 @end
 
@@ -40,12 +43,21 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     [self configHeadbtnview];
     [self configBottomBtn];
     [self configTable];
+    _isNext = NO;
     _productArr = [NSMutableArray new];
     _seriesArr = [NSMutableArray new];
+    _orderArr = [NSMutableArray new];
+    _currentRow = 0;
     _useTemplateArr  = [NSMutableArray new];
     self.view.backgroundColor = [UIColor whiteColor];
     [self requsetList];
     // Do any additional setup after loading the view.
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self getOrder];
+   
+   
 }
 - (void)configHeadView{
     _headView = [HeadView new];
@@ -121,7 +133,10 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     if ([_productTable respondsToSelector:@selector(setLayoutMargins:)]) {
         [_productTable setLayoutMargins:UIEdgeInsetsZero];
     }
-    
+    DefineWeakSelf(weakSelf);
+    _listTable.mj_header = [MJRefreshHeader headerWithRefreshingBlock:^{
+        [weakSelf listDidScroll];
+    }];
 }
 - (void)configHeadbtnview{
 
@@ -184,6 +199,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [_productArr addObjectsFromArray:[_seriesArr[indexPath.row]productList]];
         _listTable.contentOffset = CGPointZero;
         [_listTable reloadData];
+        _currentRow = indexPath.row;
     }
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -212,6 +228,21 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     return pCell;
 }
 
+- (void)listDidScroll{
+    [_listTable.mj_header endRefreshing];
+        if (_currentRow <=0) {
+            return;
+        }
+        _currentRow --;
+        NSIndexPath *firstPath = [NSIndexPath indexPathForRow:_currentRow inSection:0];
+        [_productTable selectRowAtIndexPath:firstPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        [_productArr removeAllObjects];
+        [_productArr addObjectsFromArray:[_seriesArr[_currentRow] productList]];
+        _listTable.contentOffset = CGPointZero;
+        [_listTable reloadData];
+            
+    
+}
 #pragma mark - Action
 - (void)bottomAction:(UIButton *)sender{
     switch (sender.tag ) {
@@ -248,7 +279,13 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
                 [AppAlertView showErrorMeesage:@"请选择商品"];
                 return;
             }
-            [self addShoppingCart:arr];
+            DefineWeakSelf(weakSelf);
+            [AppAlertView showTitle:@"确认提交订单" confirm:^{
+                [weakSelf  addShoppingCart:arr];
+            } cancel:^{
+                
+            }];
+            
         }break;
         default:
             break;
@@ -283,6 +320,8 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [_productArr removeAllObjects];
         for (NSDictionary *dic in responseObject[@"result"]) {
             [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+
         }
         if (_seriesArr.count) {
             [_productArr addObjectsFromArray:[_seriesArr[0] productList]];
@@ -337,9 +376,29 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     [self addShoppingCart:_useTemplateArr];
 }
 - (void)enterConfirmOrder:(NSArray *)arr{
+    NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:arr];
+    [dataArr addObjectsFromArray:_orderArr];
     ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
-    ctr.dataArr = arr;
+    ctr.dataArr = dataArr;
     [self.navigationController pushViewController:ctr animated:YES];
 }
 
+- (void)getOrder{
+    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [_orderArr removeAllObjects];
+        [_orderArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+
+        [self enterOrder];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
+    }];
+}
+- (void)enterOrder{
+    BOOL isLanch = [[[NSUserDefaults standardUserDefaults] objectForKey:orderKey] integerValue] ==1;
+    if (isLanch) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:orderKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self enterConfirmOrder:[NSArray new]];
+    }
+}
 @end

@@ -15,6 +15,8 @@
 #define safeBottomHeight [UIView safeAreaInset].bottom
 #define AppTextColor  ZJYColorHex(@"#4C4948")
 #define tokenKey @"token"
+#define orderKey @"orderKey"
+
 /**
  空白代码块
  */
