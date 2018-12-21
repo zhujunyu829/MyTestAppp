@@ -208,12 +208,14 @@
      我的手机  10:47:53
      00/apps/user/regist?moble=1&name=1&smsCode=1
      */
+     [self startTime];
+    [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"/apps/user/getBindSmsCode" parameters:@{@"moble":phone?:@""
                                                                                  } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                                                                                     [AppAlertView showErrorMeesage:responseObject[@"message"]];
-                                                                                     [self startTime];
-                                                                                 } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                                                                                      
+                                                                                     [_headView endRefresh];
+                                                                                 } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                                                                                  [_headView endRefresh];
                                                                                  }];
 }
 

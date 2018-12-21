@@ -128,12 +128,13 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     UIView *headBtnView = [UIView new];
     headBtnView.backgroundColor = ZJYColorHex(@"#7D7D7D");
     [self.view addSubview:headBtnView];
-    _headBtnView = headBtnView;
     [headBtnView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_headView.mas_bottom);
         make.height.mas_offset(50);
         make.width.mas_equalTo(self.view.mas_width);
     }];
+    _headBtnView = headBtnView;
+
     NSArray *btnArr = @[@"企业订单",@"业务员订单"];
     float widht = ZJYDeviceWidth/btnArr.count;
     for (int i = 0; i < btnArr.count; i ++) {
@@ -147,6 +148,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
             make.left.mas_equalTo(widht*i);
             make.width.equalTo(headBtnView.mas_width).dividedBy(2);
             make.height.equalTo(headBtnView.mas_height);
+            make.top.offset(0);
         }];
         btn.tag = 10+i;
         [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];

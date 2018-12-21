@@ -51,7 +51,8 @@
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(42);
             make.top.offset(0);
-            make.width.equalTo(contentView.mas_width);
+            make.width.equalTo(contentView.mas_width).offset(0);
+            make.left.offset(0);
         }];
         _confirmBtn = [self bttonWithName:@"是"];
         _cancelBtn = [self bttonWithName:@"否"];

@@ -215,11 +215,13 @@
         
         return;
     }
+    [self startTime];
+    [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"apps/user/getSmsCode" parameters:@{@"moble":phone?:@""
                                                                            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                                                                               [self startTime];
+                                                                                [_headView endRefresh];
                                                                            } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-                                                                               
+                                                                              [_headView endRefresh];
                                                                            }];
 }
 
