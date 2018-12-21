@@ -124,6 +124,6 @@
         
         return [UIApplication sharedApplication].keyWindow.safeAreaInsets;
     }
-    return UIEdgeInsetsZero;
+    return UIEdgeInsetsMake(20, 0, 0, 0);
 }
 @end

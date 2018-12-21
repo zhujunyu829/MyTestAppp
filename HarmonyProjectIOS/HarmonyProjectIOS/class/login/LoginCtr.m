@@ -165,6 +165,14 @@
 - (void)loginAction:(id)sener{
     NSString *phone = _phone.text;
     NSString *code = _password.text;
+
+    if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {
+        return;
+    }
+
+    if ([NSString cheakIsNull:code notice:@"请输入验证码"]) {
+        return;
+    }
     //apps/user/login?moble=18684868001&smsCode=940471
     DefineWeakSelf(weakSelf);
     [[RequestManger sharedClient] GET:@"apps/user/login" parameters:@{@"moble":phone?:@"",
@@ -212,7 +220,7 @@
 - (void)sentCodeAction:(id)sener{
     NSString *phone = _phone.text;
     if (!phone || !phone.length) {
-        
+        [AppAlertView showErrorMeesage:@"请输入手机号码"];
         return;
     }
     [self startTime];
