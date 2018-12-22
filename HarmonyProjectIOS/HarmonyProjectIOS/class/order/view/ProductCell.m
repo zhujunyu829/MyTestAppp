@@ -42,6 +42,7 @@
         _countField.layer.borderWidth = 1;
         _countField.delegate = self;
         _countField.text = @"0";
+        _countField.keyboardType = UIKeyboardTypeNumberPad;
         [self.contentView addSubview:_countField];
         _lineView = [GLineView new];
 //        _lineView.backgroundColor = ZJYColorHex(@"00ccff");
@@ -54,7 +55,7 @@
         }];
         _titleLabel.text = @" ";
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_imageView.mas_right).offset(24);
+            make.left.equalTo(_imageView.mas_right).offset(5);
             make.top.equalTo(_imageView.mas_top);
             make.width.equalTo(self.contentView).offset(-100);
         }];
@@ -69,20 +70,20 @@
         desBtn.layer.masksToBounds = YES;
         desBtn.layer.cornerRadius = 2;
         desBtn.backgroundColor = ZJYColorHex(@"#009944");
-        desBtn.titleLabel.font = ZJYBodyFont(15);
+        desBtn.titleLabel.font = ZJYBodyFont(25);
         [desBtn setTitle:@"-" forState:UIControlStateNormal];
         [desBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.contentView addSubview:desBtn];
         [desBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_titleLabel.mas_bottom).offset(15);
-            make.width.mas_equalTo(20);
-            make.height.mas_equalTo(20);
+            make.top.equalTo(_titleLabel.mas_bottom).offset(5);
+            make.width.mas_equalTo(30);
+            make.height.mas_equalTo(30);
             make.left.equalTo(_titleLabel.mas_left);
         }];
         [desBtn addTarget:self action:@selector(desBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(desBtn.mas_right).offset(3);
-            make.height.mas_equalTo(20);
+            make.height.equalTo(desBtn.mas_height);
             make.centerY.equalTo(desBtn.mas_centerY);
             make.width.mas_equalTo(80);
         }];
@@ -90,14 +91,14 @@
         addBtn.layer.masksToBounds = YES;
         addBtn.layer.cornerRadius = 2;
         addBtn.backgroundColor = ZJYColorHex(@"#009944");
-        addBtn.titleLabel.font = ZJYBodyFont(15);
+        addBtn.titleLabel.font = ZJYBodyFont(25);
         [addBtn setTitle:@"+" forState:UIControlStateNormal];
         [addBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.contentView addSubview:addBtn];
         [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(desBtn.mas_centerY);
-            make.width.mas_equalTo(20);
-            make.height.mas_equalTo(20);
+            make.width.equalTo(desBtn.mas_height);
+            make.height.equalTo(desBtn.mas_height);
             make.left.equalTo(_countField.mas_right).offset(3);
         }];
         [addBtn addTarget:self action:@selector(addBtnAction:) forControlEvents:UIControlEventTouchUpInside];

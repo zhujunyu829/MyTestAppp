@@ -16,6 +16,7 @@
     UITextField *_password;
     UITextField *_name;
     UIButton *_senderBtn;
+    UIButton *_logOutBtn;
 }
 @end
 
@@ -45,6 +46,7 @@
     [self.view addSubview:_phone];
     
     _name = [self fieldWithLeftTitle:@"用户名"];
+    _name.hidden = YES;
     [self.view addSubview:_name];
     
     _password = [self fieldWithLeftTitle:@"验证码"];
@@ -67,9 +69,9 @@
     line1.top = 20 +_headView.bottom;
     _phone.top = line1.bottom;
     line2.bottom = _phone.bottom;
-    _name.top = line2.bottom;
-    line3.bottom = _name.bottom;
-    _password.top = line3.bottom;
+//    _name.top = line2.bottom;
+//    line3.bottom = _name.bottom;
+    _password.top = line2.bottom;
     line4.top = _password.bottom;
 //    _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -98,9 +100,10 @@
         make.centerX.offset(0);
         make.top.equalTo(_password.mas_bottom).offset(30);
     }];
+    _logOutBtn = logOutBtn;
     UIButton *wechatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.view addSubview:wechatBtn];
-    [wechatBtn setTitle:@"点击‘注册并登录’即代表同意《注册用户须知》" forState:UIControlStateNormal];
+    [wechatBtn setTitle:@"我同意《注册用户须知》" forState:UIControlStateNormal];
     [wechatBtn setTitleColor:ZJYColorHex(@"#019944") forState:UIControlStateNormal];
     wechatBtn.titleLabel.font = ZJYSYFont(12);
     [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -108,6 +111,19 @@
         make.centerX.offset(0);
         make.top.equalTo(logOutBtn.mas_bottom).offset(10);
     }];
+    
+    UIButton *bodyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:bodyBtn];
+    [bodyBtn setImage:[UIImage imageNamed:@"anybody_selecte"] forState:UIControlStateNormal];
+    [bodyBtn setImage:[UIImage imageNamed:@"anybody_selecte_on"] forState:UIControlStateSelected];
+    bodyBtn.selected = YES;
+    [bodyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(30);
+        make.right.equalTo(wechatBtn.mas_left).offset(-5);
+        make.centerY.equalTo(wechatBtn.mas_centerY);
+    }];
+    [bodyBtn addTarget:self action:@selector(bodyAction:) forControlEvents:UIControlEventTouchUpInside];
+
     [wechatBtn addTarget:self action:@selector(weichatAction:) forControlEvents:UIControlEventTouchUpInside];
    
     [logOutBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -159,9 +175,9 @@
     if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {
         return;
     }
-    if ([NSString cheakIsNull:name notice:@"请输入用户名"]) {
-        return;
-    }
+//    if ([NSString cheakIsNull:name notice:@"请输入用户名"]) {
+//        return;
+//    }
     if ([NSString cheakIsNull:code notice:@"请输入验证码"]) {
         return;
     }
@@ -214,6 +230,12 @@
                                                                            } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                                                                              [_headView endRefresh];
                                                                            }];
+}
+- (void)bodyAction:(UIButton *)sender{
+    sender.selected = !sender.selected;
+    _logOutBtn.backgroundColor = sender.selected?ZJYColorHex(@"#019944"):ZJYColorHex(@"999999");
+    _logOutBtn.userInteractionEnabled = sender.selected;
+
 }
 
 -(void)startTime{

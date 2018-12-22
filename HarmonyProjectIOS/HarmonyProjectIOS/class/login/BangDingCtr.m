@@ -32,7 +32,7 @@
 - (void)configHeadView{
     DefineWeakSelf(weakSelf);
     _headView = [HeadView new];
-    _headView.title = @"绑定微信";
+    _headView.title = @"绑定用户";
     _headView.hiddenRightback = YES;
     _headView.backCallBack = ^{
         [weakSelf backAction];
@@ -45,6 +45,7 @@
     [self.view addSubview:_phone];
     
     _name = [self fieldWithLeftTitle:@"用户名"];
+    _name.hidden = YES;
     [self.view addSubview:_name];
     
     _password = [self fieldWithLeftTitle:@"验证码"];
@@ -67,9 +68,9 @@
     line1.top = 20 +_headView.bottom;
     _phone.top = line1.bottom;
     line2.bottom = _phone.bottom;
-    _name.top = line2.bottom;
-    line3.bottom = _name.bottom;
-    _password.top = line3.bottom;
+//    _name.top = line2.bottom;
+//    line3.bottom = _name.bottom;
+    _password.top = line2.bottom;
     line4.top = _password.bottom;
 //    _phone.text = @"13786143385";
     _senderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -159,9 +160,9 @@
     if ([NSString cheakIsNull:phone notice:@"请输入手机号码"]) {
         return;
     }
-    if ([NSString cheakIsNull:name notice:@"请输入用户名"]) {
-        return;
-    }
+//    if ([NSString cheakIsNull:name notice:@"请输入用户名"]) {
+//        return;
+//    }
     if ([NSString cheakIsNull:code notice:@"请输入验证码"]) {
         return;
     }

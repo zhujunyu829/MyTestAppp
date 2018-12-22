@@ -120,10 +120,14 @@
 }
 
 + (UIEdgeInsets)safeAreaInset{
+    UIEdgeInsets inset = UIEdgeInsetsMake(20, 0, 0, 0);
     if (@available(iOS 11.0, *)) {
         
-        return [UIApplication sharedApplication].keyWindow.safeAreaInsets;
+        inset = [UIApplication sharedApplication].keyWindow.safeAreaInsets;
     }
-    return UIEdgeInsetsMake(20, 0, 0, 0);
+    if (inset.top == 0) {
+        inset = UIEdgeInsetsMake(20, 0, 0, 0);
+    }
+    return inset;
 }
 @end

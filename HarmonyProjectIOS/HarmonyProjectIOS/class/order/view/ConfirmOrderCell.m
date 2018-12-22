@@ -57,6 +57,7 @@
         _countField.layer.borderWidth = 1;
         _countField.delegate = self;
         _countField.text = @"0";
+        _countField.keyboardType = UIKeyboardTypeNumberPad;
         [self.contentView addSubview:_countField];
         
         _desView = [UITextView new];
@@ -87,7 +88,7 @@
         desBtn.layer.masksToBounds = YES;
         desBtn.layer.cornerRadius = 2;
         desBtn.backgroundColor = ZJYColorHex(@"#009944");
-        desBtn.titleLabel.font = ZJYBodyFont(13);
+        desBtn.titleLabel.font = ZJYBodyFont(25);
         [desBtn setTitle:@"-" forState:UIControlStateNormal];
         [desBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.contentView addSubview:desBtn];
@@ -98,7 +99,7 @@
         addBtn.layer.masksToBounds = YES;
         addBtn.layer.cornerRadius = 2;
         addBtn.backgroundColor = ZJYColorHex(@"#009944");
-        addBtn.titleLabel.font = ZJYBodyFont(13);
+        addBtn.titleLabel.font = ZJYBodyFont(25);
         [addBtn setTitle:@"+" forState:UIControlStateNormal];
         [addBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.contentView addSubview:addBtn];
@@ -114,12 +115,12 @@
             make.left.equalTo(_imageView.mas_right).offset(20);
             make.centerY.equalTo(_imageView.mas_centerY);
             make.height.equalTo(self.contentView.mas_height).multipliedBy(0.8);
-            make.width.equalTo(self.contentView.mas_width).offset(-240);
+            make.width.equalTo(self.contentView.mas_width).offset(-260);
         }];
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_desView.mas_right).offset(24);
+            make.left.equalTo(_desView.mas_right).offset(10);
             make.top.equalTo(_imageView.mas_top);
-            make.width.equalTo(self.contentView).offset(-100);
+            make.width.equalTo(self.contentView).offset(-130);
         }];
         
         [_lineView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -132,21 +133,21 @@
         
    
         [desBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_titleLabel.mas_bottom).offset(15);
-            make.width.mas_equalTo(20);
-            make.height.mas_equalTo(20);
+            make.top.equalTo(_titleLabel.mas_bottom).offset(5);
+            make.width.mas_equalTo(30);
+            make.height.mas_equalTo(30);
             make.left.equalTo(_titleLabel.mas_left);
         }];
         [_countField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(desBtn.mas_right).offset(3);
-            make.height.mas_equalTo(20);
+            make.height.mas_equalTo(30);
             make.centerY.equalTo(desBtn.mas_centerY);
             make.width.mas_equalTo(80);
         }];
         [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(desBtn.mas_centerY);
-            make.width.mas_equalTo(20);
-            make.height.mas_equalTo(20);
+            make.width.mas_equalTo(30);
+            make.height.mas_equalTo(30);
             make.left.equalTo(_countField.mas_right).offset(3);
         }];
     }
@@ -159,6 +160,8 @@
     _model = model;
     _countField.text = [NSString stringWithFormat:@"%d",_model.count];
     _desView.text = _model.remark;
+    _placeholderLable.hidden = _desView.text.length >=1;
+
     
 }
 

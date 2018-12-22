@@ -85,7 +85,7 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
 - (NSAttributedString *)cheakTotal{
     int co = 0;
     float mon = 0;
-    for (SeriesModel *model in _dataArr) {
+    for (SeriesModel *model in self.dataArr) {
         for (ProductModel *m in model.productList) {
             co += m.count;
         }
@@ -183,7 +183,16 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     NSString *noticeString = [NSString stringWithFormat:@"%@16:00~%@10:00订单已提交，系统将在%@上午10点自动收单，如需修改，请更改数量后再次确认",nowString,nextString,nextDa];
     noticel.text = noticeString;
 
-    
+    if (self.dic) {
+        NSString *time = self.dic[@"time"];
+        NSString *endTime = self.dic[@"endTime"];
+        NSArray *liste = self.dic[@"seriesList"];
+        if (liste.count) {
+            noticel.text = [NSString stringWithFormat:@"%@自动收单，如需修改，请更改数量后再次确认",time];
+        }else{
+            noticel.text = [NSString stringWithFormat:@"今日未提交订单，请及时下单，系统将在%@自动收单",endTime];
+        }
+    }
     //有效时间：2018年10月15日16:00-16日10:00
 }
 -(NSDate *)offsetDay:(int)numDays date:(NSDate*)dat {
@@ -299,6 +308,36 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     
     return model.productList.count;
 }
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    SeriesModel *sM = self.dataArr[indexPath.section];
+    
+    ProductModel *mode = [sM.productList objectAtIndex:indexPath.row];
+    [self deletdaP:mode back:^{
+        NSMutableArray *arr = [NSMutableArray arrayWithArray:sM.productList];
+        [arr removeObjectAtIndex:indexPath.row];
+        sM.productList = arr;
+        if (arr.count <=0) {
+            [self.dataArr removeObjectAtIndex:indexPath.section];
+
+        }else{
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+        }
+        _coutLabel.attributedText = [self cheakTotal];
+        [tableView reloadData];
+    }];
+    
+
+}
+- (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.dataArr.count;
 }
@@ -325,10 +364,12 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     [_headView beginRefresh];
     [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{}  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
+        [self.dataArr removeAllObjects];
         [_useTemplateArr removeAllObjects];
         [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
-        [self.dataArr removeAllObjects];
         [self.dataArr addObjectsFromArray:_useTemplateArr];
+        [self addShoppingCart:_useTemplateArr];
+        _coutLabel.attributedText = [self cheakTotal];
         [_table reloadData];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];
@@ -383,6 +424,46 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
         [_headView endRefresh];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
          [_headView endRefresh];
+    }];
+}
+- (void)addShoppingCart:(NSArray *)arr{
+    ///apps/order/addShoppingCart
+    
+    NSMutableArray *list = [NSMutableArray new];
+    for (SeriesModel *sModel in arr) {
+        for (ProductModel *m in sModel.productList ) {
+            NSLog(@"%@",m.mj_keyValues);
+            NSMutableDictionary *dic = m.mj_keyValues;
+            [dic setObject:@(m.count) forKey:@"piece"];
+            [dic removeObjectForKey:@"count"];
+            [list addObject:dic];
+        }
+    }
+    DefineWeakSelf(weakSelf);
+    [[RequestManger sharedClient] POST:@"apps/order/addShoppingCart" parameters:list  showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        //        [weakSelf enterConfirmOrder:arr];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        
+    }];
+}
+
+- (void)deletdaP:(ProductModel *)model back:(voidBlock)success{
+    //http:/ /134.175.70.113:8000/apps/order/deleteShoppingCart?productId=1
+    //http://134.175.70.113:8000/apps/order/deleteProduct?productId=333
+//    if (!model.orderId) {
+//        
+//        return;
+//    }
+//    if (model.awardTemplateId.intValue) {
+//        [[RequestManger sharedClient] GET:@"apps/order/deleteProduct" parameters:@{@"productId":model.productId?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+//            success();
+//        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+//        }];
+//        return;
+//    }
+    [[RequestManger sharedClient] GET:@"apps/order/deleteShoppingCart" parameters:@{@"productId":model.productId?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        success();
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
     }];
 }
 /*

@@ -27,11 +27,12 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     UITableView *_productTable;//产品列表
     UITableView *_listTable;//系列列表
     NSMutableArray *_seriesArr;
-    NSMutableArray *_productArr;
     NSMutableArray *_useTemplateArr;
     NSMutableArray *_orderArr;
     int _currentRow;
-    BOOL _isNext;
+    BOOL _isTouch;
+    NSDictionary *_oderDic;
+    UIView *_blankView;
 }
 @end
 
@@ -43,21 +44,50 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     [self configHeadbtnview];
     [self configBottomBtn];
     [self configTable];
-    _isNext = NO;
-    _productArr = [NSMutableArray new];
+    [self personListView];
+    _isTouch = NO;
     _seriesArr = [NSMutableArray new];
     _orderArr = [NSMutableArray new];
     _currentRow = 0;
     _useTemplateArr  = [NSMutableArray new];
+    
     self.view.backgroundColor = [UIColor whiteColor];
-    [self requsetList];
     // Do any additional setup after loading the view.
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self requsetList];
     [self getOrder];
    
-   
+}
+- (void)personListView{
+    _blankView = [UIView new];
+    _blankView.backgroundColor = [UIColor whiteColor];
+    _blankView.hidden = YES;
+    [self.view addSubview:_blankView];
+    [_blankView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_headBtnView.mas_bottom);
+        make.width.equalTo(self.view.mas_width);
+        make.left.offset(0);
+        make.bottom.mas_equalTo(-(50+safeBottomHeight));
+    }];
+    
+    UIImageView *iamggeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defuat"]];
+    [_blankView addSubview:iamggeView];
+    [iamggeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.offset(50);
+        make.centerX.offset(0);
+    }];
+    UILabel *noticeLabel = [UILabel new];
+    [_blankView addSubview:noticeLabel];
+    [noticeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.offset(0);
+        make.top.equalTo(iamggeView.mas_bottom).offset(10);
+    }];
+    noticeLabel.text = @"敬请期待";
+    noticeLabel.textColor = ZJYColorHex(@"949494");
+    noticeLabel.font = ZJYSYFont(15);
+    noticeLabel.textAlignment = NSTextAlignmentCenter;
 }
 - (void)configHeadView{
     _headView = [HeadView new];
@@ -134,9 +164,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [_productTable setLayoutMargins:UIEdgeInsetsZero];
     }
     DefineWeakSelf(weakSelf);
-    _listTable.mj_header = [MJRefreshHeader headerWithRefreshingBlock:^{
-        [weakSelf listDidScroll];
-    }];
+    
 }
 - (void)configHeadbtnview{
 
@@ -184,9 +212,12 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     return 80;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    
-    return 0;
+    if (tableView == _productTable) {
+        return CGFLOAT_MIN;
+    }
+    return CGFLOAT_MIN;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return CGFLOAT_MIN;
 }
@@ -195,20 +226,83 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView == _productTable) {
-        [_productArr removeAllObjects];
-        [_productArr addObjectsFromArray:[_seriesArr[indexPath.row]productList]];
-        _listTable.contentOffset = CGPointZero;
-        [_listTable reloadData];
-        _currentRow = indexPath.row;
+        _isTouch = YES;
+
+        NSIndexPath *firstPath = [NSIndexPath indexPathForRow:0 inSection:indexPath.row];
+        [_listTable scrollToRowAtIndexPath:firstPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (_listTable==tableView) {
+        SeriesModel *model = _seriesArr[section];
+        
+        UIView *headView = [UIView new];
+        headView.width = tableView.width;
+        headView.height = 30;
+        headView.backgroundColor = ZJYColorHex(@"#ffffff");
+        
+        UILabel *textLabel = [UILabel new];
+        textLabel.font = ZJYSYFont(14);
+        textLabel.textColor = ZJYColorHex(@"#4C4948");
+        textLabel.text = model.seriesName;
+        textLabel.left = 15;
+        textLabel.height = 20;
+        textLabel.width = 120;
+        textLabel.top = 10;
+        [headView addSubview:textLabel];
+        UIView *lien  = [UIView new];
+        lien.height =1;
+        lien.width = headView.width;
+        lien.backgroundColor =  ZJYColorHex(@"7D7D7D");
+//        [headView addSubview:lien];
+        lien.bottom = headView.height;
+        return headView;
+
+    }
+    return [UIView new];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (scrollView == _listTable) {
+        if (_isTouch) {
+            _isTouch = NO;
+            return;
+        }
+        NSArray <UITableViewCell *> *cellArray = [_listTable  visibleCells];
+        //cell的section的最小值
+        long cellSectionMINCount = LONG_MAX;
+        for (int i = 0; i < cellArray.count; i++) {
+            UITableViewCell *cell = cellArray[i];
+            long cellSection = [_listTable indexPathForCell:cell].section;
+            if (cellSection < cellSectionMINCount) {
+                cellSectionMINCount = cellSection;
+            }
+        }
+        
+        _currentRow = cellSectionMINCount;
+        if (_currentRow > _seriesArr.count) {
+            return;
+        }
+        NSLog(@"当前悬停的组头是:%ld",_currentRow);
+        NSIndexPath *firstPath = [NSIndexPath indexPathForRow:_currentRow inSection:0];
+        [_productTable selectRowAtIndexPath:firstPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+
+    }
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView == _productTable) {
         return _seriesArr.count;
     }
-    return _productArr.count;
+    NSArray *pArr = [_seriesArr[section] productList];
+
+    return pArr.count;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (_listTable == tableView) {
+        return _seriesArr.count;
+    }
     return 1;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -220,29 +314,15 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [cell setModel:_seriesArr[indexPath.row]];
         return cell;
     }
+    NSArray *pArr = [_seriesArr[indexPath.section] productList];
     ProductCell *pCell = [tableView dequeueReusableCellWithIdentifier:@"pCell"];
     if (!pCell) {
         pCell = [[ProductCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"pCell"];
     }
-    [pCell setModel:_productArr[indexPath.row]];
+    [pCell setModel:pArr[indexPath.row]];
     return pCell;
 }
 
-- (void)listDidScroll{
-    [_listTable.mj_header endRefreshing];
-        if (_currentRow <=0) {
-            return;
-        }
-        _currentRow --;
-        NSIndexPath *firstPath = [NSIndexPath indexPathForRow:_currentRow inSection:0];
-        [_productTable selectRowAtIndexPath:firstPath animated:YES scrollPosition:UITableViewScrollPositionNone];
-        [_productArr removeAllObjects];
-        [_productArr addObjectsFromArray:[_seriesArr[_currentRow] productList]];
-        _listTable.contentOffset = CGPointZero;
-        [_listTable reloadData];
-            
-    
-}
 #pragma mark - Action
 - (void)bottomAction:(UIButton *)sender{
     switch (sender.tag ) {
@@ -281,7 +361,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
             }
             DefineWeakSelf(weakSelf);
             [AppAlertView showTitle:@"确认提交订单" confirm:^{
-                [weakSelf  addShoppingCart:arr];
+                [weakSelf  addShoppingCart:arr isUsertep:NO];
             } cancel:^{
                 
             }];
@@ -300,6 +380,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     sender.selected = YES;
     sender.backgroundColor = ZJYColorHex(@"019944");
     _currentbnt = sender;
+    _blankView.hidden = sender.tag == 10;
 }
 /*
 #pragma mark - Navigation
@@ -317,15 +398,14 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     [[RequestManger sharedClient] GET:@"apps/product/list" parameters:@{}  showMessage:NO success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
         [_seriesArr removeAllObjects];
-        [_productArr removeAllObjects];
         for (NSDictionary *dic in responseObject[@"result"]) {
             [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
-            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
 
         }
-        if (_seriesArr.count) {
-            [_productArr addObjectsFromArray:[_seriesArr[0] productList]];
-        }
+       
         [_productTable reloadData];
         [_listTable reloadData];
         NSIndexPath *firstPath = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -336,7 +416,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     }];
 }
 
-- (void)addShoppingCart:(NSArray *)arr{
+- (void)addShoppingCart:(NSArray *)arr isUsertep:(BOOL)tep{
     ///apps/order/addShoppingCart
     
     NSMutableArray *list = [NSMutableArray new];
@@ -350,7 +430,14 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         }
     }
     DefineWeakSelf(weakSelf);
-    [[RequestManger sharedClient] POST:@"apps/order/addShoppingCart" parameters:list  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [[RequestManger sharedClient] POST:@"apps/order/addShoppingCart" parameters:list  showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        if (tep) {
+            ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
+            ctr.dataArr = arr;
+            [weakSelf.navigationController pushViewController:ctr animated:YES];
+            return ;
+        }
+
         [weakSelf enterConfirmOrder:arr];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         
@@ -359,7 +446,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
 - (void)requsetuseTemplate{
     //apps/order/useTemplate
     [_headView beginRefresh];
-    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} showMessage:NO success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
         [_useTemplateArr removeAllObjects];
         [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
@@ -373,21 +460,26 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [AppAlertView showErrorMeesage:@"没获取到模版"];
         return;
     }
-    [self addShoppingCart:_useTemplateArr];
+    [self addShoppingCart:_useTemplateArr isUsertep:YES];
 }
 - (void)enterConfirmOrder:(NSArray *)arr{
     NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:arr];
     [dataArr addObjectsFromArray:_orderArr];
+    if (!dataArr.count) {
+        return;
+    }
     ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
     ctr.dataArr = dataArr;
+    ctr.dic = _oderDic;
     [self.navigationController pushViewController:ctr animated:YES];
 }
 
 - (void)getOrder{
-    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    ///apps/order/getOrder
+    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_orderArr removeAllObjects];
         [_orderArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
-
+        _oderDic = responseObject[@"result"];
         [self enterOrder];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];

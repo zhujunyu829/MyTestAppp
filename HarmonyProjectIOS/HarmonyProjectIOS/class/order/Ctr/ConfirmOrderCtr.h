@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ConfirmOrderCtr : UIViewController
 
 @property (nonatomic, retain) NSMutableArray *dataArr;
+
+@property (nonatomic, retain) NSDictionary *dic;
+
 @end
 
 NS_ASSUME_NONNULL_END

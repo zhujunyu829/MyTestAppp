@@ -100,7 +100,7 @@
     if (!cell) {
         cell = [[HistoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HistoryCell"];
     }
-    [cell setModel:_dataArr[indexPath.row]];
+    [cell setModel:_dataArr[indexPath.section]];
     return cell;
 }
 //apps/order/queryOrderList
