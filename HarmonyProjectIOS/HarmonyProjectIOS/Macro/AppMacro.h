@@ -16,6 +16,7 @@
 #define AppTextColor  ZJYColorHex(@"#4C4948")
 #define tokenKey @"token"
 #define orderKey @"orderKey"
+#define mainKey @"mainKey"
 
 /**
  空白代码块

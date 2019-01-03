@@ -36,6 +36,9 @@
     _headView.hiddenback = YES;
     _headView.title = @"我的";
     [_headView endRefresh];
+    _headView.homeCallBack = ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:mainKey object:nil];
+    };
     [self.view addSubview:_headView];
 }
 
@@ -168,7 +171,7 @@
                                                                       } showMessage:NO
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                   NSDictionary *result = responseObject[@"result"];
-                                  _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"dealersName"]];
+                                  _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"districtName"]];
                                   _switch.on = [result[@"isPcOrder"] intValue];
                                   
                               }

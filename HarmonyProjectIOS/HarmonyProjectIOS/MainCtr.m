@@ -32,7 +32,12 @@
     tab.selectedIndex = 1;
     _tab = tab;
     [self configBtn];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainAction:) name:mainKey object:nil];
     // Do any additional setup after loading the view.
+}
+- (void)mainAction:(id)sender{
+    UIButton *btn = [_tabV viewWithTag:11];
+    [self btnAction:btn];
 }
 - (UIViewController *)changeNav:(UIViewController *)ctr{
     UINavigationController *nave = [[UINavigationController alloc] initWithRootViewController:ctr];

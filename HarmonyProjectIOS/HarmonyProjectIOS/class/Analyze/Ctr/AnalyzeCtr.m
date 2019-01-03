@@ -28,6 +28,9 @@
     _headView.hiddenback = YES;
     _headView.title = @"数据分析";
     [_headView endRefresh];
+    _headView.homeCallBack = ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:mainKey object:nil];
+    };
     [self.view addSubview:_headView];
     UIImageView *iamggeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"defuat"]];
     [self.view addSubview:iamggeView];

@@ -434,6 +434,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         if (tep) {
             ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
             ctr.dataArr = arr;
+            ctr.dic = _oderDic;
             [weakSelf.navigationController pushViewController:ctr animated:YES];
             return ;
         }
