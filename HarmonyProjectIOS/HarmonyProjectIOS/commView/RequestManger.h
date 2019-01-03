@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define  APPURL @"http://134.175.70.113:8000/"
+#define  APPURL @"http://dd.hch5.cc/"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RequestManger : NSObject

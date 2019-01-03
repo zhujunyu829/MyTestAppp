@@ -171,7 +171,7 @@
                                                                       } showMessage:NO
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                   NSDictionary *result = responseObject[@"result"];
-                                  _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"districtName"]];
+                                  _nameLabel.text = [NSString stringWithFormat:@"%@",result[@"dealersName"]];
                                   _switch.on = [result[@"isPcOrder"] intValue];
                                   
                               }

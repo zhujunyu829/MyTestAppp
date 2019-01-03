@@ -171,7 +171,6 @@
     //er?openId=1&moble=1&name=1&smsCode=1
     [[RequestManger sharedClient] GET:@"/apps/user/bindUser" parameters:@{@"openId":self.openID?:@"",
                                                                           @"moble":phone?:@"",
-                                                                       @"name":name?:@"",
                                                                        @"smsCode":code?:@""
                                                                        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                                                            NSString *token = responseObject[@"result"];
