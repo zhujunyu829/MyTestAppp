@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     NSMutableArray *_seriesArr;
     NSMutableArray *_useTemplateArr;
     NSMutableArray *_orderArr;
+    NSMutableArray *_lastOrder;
     int _currentRow;
     BOOL _isTouch;
     NSDictionary *_oderDic;
@@ -328,7 +329,7 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     switch (sender.tag ) {
         case OrderBottomTypTemp:
         {
-            [self requsetuseTemplate];
+            [self enterTemplate];
         }break;
         case OrderBottomTypHistory:
         {
@@ -391,6 +392,44 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark -跳转逻辑
+- (void)enterTemplate {
+    //apps/order/useTemplate
+    [_headView beginRefresh];
+    DefineWeakSelf(weakSelf);
+    [self deleteShoppingSuccess:^{
+        [_orderArr removeAllObjects];
+        [weakSelf requsetuseTemplate];
+    }];
+}
+
+- (void)enterConfirmOrderWithOlderOrder:(NSArray *)arr{
+    NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:arr];
+    [dataArr addObjectsFromArray:_orderArr];
+    [self enterConfirmOrder:dataArr];
+}
+- (void)enterConfirmOrder:(NSArray *)arr{
+    if (!arr.count) {
+        [AppAlertView showErrorMeesage:@"无数据"];
+        return ;
+    }
+    ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
+    ctr.dataArr = arr;
+    ctr.dic = _oderDic;
+    [self.navigationController pushViewController:ctr animated:YES];
+}
+
+- (void)autoEnterOrder{
+    BOOL isLanch = [[[NSUserDefaults standardUserDefaults] objectForKey:orderKey] integerValue] ==1;
+    if (isLanch) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:orderKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self enterConfirmOrderWithOlderOrder:[NSArray new]];
+    }
+}
+
+#pragma mark - request
 - (void)requsetList{
     //apps/order/queryOrderList
     //apps/product/list
@@ -400,12 +439,12 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [_seriesArr removeAllObjects];
         for (NSDictionary *dic in responseObject[@"result"]) {
             [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
-//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
-//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
-//            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
-
+            //            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+            //            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+            //            [_seriesArr addObject:[SeriesModel mj_objectWithKeyValues:dic]];
+            
         }
-       
+        
         [_productTable reloadData];
         [_listTable reloadData];
         NSIndexPath *firstPath = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -415,7 +454,58 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
         [_headView endRefresh];
     }];
 }
+- (void)requsetuseTemplate{
+    DefineWeakSelf(weakSelf);
+    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} showMessage:NO success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [_headView endRefresh];
+        [_useTemplateArr removeAllObjects];
+        [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+        [weakSelf enterConfirmOrder:_useTemplateArr];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
+    }];
+}
+- (void)deleteShoppingSuccess:(voidBlock)success{
+    __block int i = 0;
+    for (SeriesModel *sModel in _orderArr  ) {
+        i += sModel.productList.count;
+    }
+    if (i <=0) {
+        success();
+        return;
+    }
+    for (SeriesModel *sModel in _orderArr  ) {
+        for (ProductModel *m in sModel.productList ) {
+            [self deletdaP:m back:^{
+                i--;
+                if (i <=0) {
+                    success();
+                }
+            }];
+        }
+        
+    }
+}
+- (void)deletdaP:(ProductModel *)model back:(voidBlock)success{
+    [[RequestManger sharedClient] GET:@"apps/order/deleteShoppingCart" parameters:@{@"productId":model.productId?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        success();
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+    }];
+}
 
+- (void)getOrder{
+    ///apps/order/getOrder
+    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [_orderArr removeAllObjects];
+        [_lastOrder removeAllObjects];
+        [_orderArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
+        [_lastOrder addObjectsFromArray:_orderArr];
+        _oderDic = responseObject[@"result"];
+        [self autoEnterOrder];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
+    }];
+}
 - (void)addShoppingCart:(NSArray *)arr isUsertep:(BOOL)tep{
     ///apps/order/addShoppingCart
     
@@ -435,63 +525,13 @@ typedef NS_ENUM(NSInteger,OrderBottomTyp) {
             ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
             ctr.dataArr = arr;
             ctr.dic = _oderDic;
-            [weakSelf.navigationController pushViewController:ctr animated:YES];
+            [self.navigationController pushViewController:ctr animated:YES];
             return ;
         }
-
-        [weakSelf enterConfirmOrder:arr];
+        
+        [weakSelf enterConfirmOrderWithOlderOrder:arr];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         
     }];
-}
-- (void)requsetuseTemplate{
-    //apps/order/useTemplate
-    [_headView beginRefresh];
-    [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{} showMessage:NO success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-        [_headView endRefresh];
-        [_useTemplateArr removeAllObjects];
-        [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
-        [self enterTemplate];
-    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-        [_headView endRefresh];
-    }];
-}
-- (void)enterTemplate{
-    if (!_useTemplateArr.count) {
-        [AppAlertView showErrorMeesage:@"没获取到模版"];
-        return;
-    }
-    [self addShoppingCart:_useTemplateArr isUsertep:YES];
-}
-- (void)enterConfirmOrder:(NSArray *)arr{
-    NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:arr];
-    [dataArr addObjectsFromArray:_orderArr];
-    if (!dataArr.count) {
-        return;
-    }
-    ConfirmOrderCtr *ctr = [ConfirmOrderCtr new];
-    ctr.dataArr = dataArr;
-    ctr.dic = _oderDic;
-    [self.navigationController pushViewController:ctr animated:YES];
-}
-
-- (void)getOrder{
-    ///apps/order/getOrder
-    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-        [_orderArr removeAllObjects];
-        [_orderArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
-        _oderDic = responseObject[@"result"];
-        [self enterOrder];
-    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-        [_headView endRefresh];
-    }];
-}
-- (void)enterOrder{
-    BOOL isLanch = [[[NSUserDefaults standardUserDefaults] objectForKey:orderKey] integerValue] ==1;
-    if (isLanch) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(0) forKey:orderKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [self enterConfirmOrder:[NSArray new]];
-    }
 }
 @end

@@ -80,13 +80,15 @@
     [_indicatorV startAnimating];
     _titleLabel.text = @"收取中...";
     _indicatorV.hidden = NO;
-
+    self.superview.userInteractionEnabled = NO;
 }
 
 - (void)endRefresh{
     _titleLabel.text = self.title;
     _indicatorV.hidden = YES;
     [_indicatorV stopAnimating];
+    self.superview.userInteractionEnabled = YES;
+
 }
 - (void)backAction:(id)sender{
     if (self.backCallBack) {

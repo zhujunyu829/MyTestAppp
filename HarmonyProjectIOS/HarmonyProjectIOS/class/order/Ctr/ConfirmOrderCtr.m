@@ -359,20 +359,26 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
     return [UITableViewCell new];
 }
 #pragma mark- requset
-- (void)requsetuseTemplate{
-    //apps/order/useTemplate
-    [_headView beginRefresh];
+- (void)useTemplate{
     [[RequestManger sharedClient] GET:@"apps/order/useTemplate" parameters:@{}  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
         [self.dataArr removeAllObjects];
         [_useTemplateArr removeAllObjects];
         [_useTemplateArr addObjectsFromArray:[SeriesModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"seriesList"]]];
         [self.dataArr addObjectsFromArray:_useTemplateArr];
-        [self addShoppingCart:_useTemplateArr];
         _coutLabel.attributedText = [self cheakTotal];
         [_table reloadData];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [_headView endRefresh];
+    }];
+
+}
+- (void)requsetuseTemplate{
+    //apps/order/useTemplate
+    [_headView beginRefresh];
+    DefineWeakSelf(weakSelf);
+    [self deleteShoppingSuccess:^{
+        [weakSelf useTemplate];
     }];
 }
 - (void)saveOrder{
@@ -413,22 +419,52 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
             [list addObject:dic];
         }
     }
-//    NSError *error ;
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:list
-//                                                       options:kNilOptions
-//                                                         error:&error];
-//
-//    NSString *jsonString = [[NSString alloc] initWithData:jsonData
-//                                                 encoding:NSUTF8StringEncoding];
+
     [[RequestManger sharedClient] POST:@"apps/order/savecollect" parameters:list success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [_headView endRefresh];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
          [_headView endRefresh];
     }];
 }
+
+- (void)deleteShoppingSuccess:(voidBlock)success{
+    __block int i = 0;
+    for (SeriesModel *sModel in self.dataArr  ) {
+        i += sModel.productList.count;
+        
+    }
+    if (i <=0) {
+        success();
+        return;
+    }
+    for (SeriesModel *sModel in self.dataArr  ) {
+        for (ProductModel *m in sModel.productList ) {
+            [self backGroudDeletdaP:m back:^{
+                i--;
+                if (i <=0) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self getOrder];
+                        success();
+
+                    });
+                }
+            }];
+        }
+        
+    }
+}
+- (void)getOrder{
+    ///apps/order/getOrder
+    [[RequestManger sharedClient] GET:@"apps/order/getOrder" parameters:@{} showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        NSLog(@"~~~~~~%@",responseObject);
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        [_headView endRefresh];
+    }];
+}
+
 - (void)addShoppingCart:(NSArray *)arr{
     ///apps/order/addShoppingCart
-    
+    [self getOrder];
     NSMutableArray *list = [NSMutableArray new];
     for (SeriesModel *sModel in arr) {
         for (ProductModel *m in sModel.productList ) {
@@ -439,33 +475,30 @@ typedef NS_ENUM(NSInteger,ConfirmOrderBottomTyp) {
             [list addObject:dic];
         }
     }
-    DefineWeakSelf(weakSelf);
     [[RequestManger sharedClient] POST:@"apps/order/addShoppingCart" parameters:list  showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        [self getOrder];
         //        [weakSelf enterConfirmOrder:arr];
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         
     }];
 }
+- (void)backGroudDeletdaP:(ProductModel *)model back:(voidBlock)success{
+    [[RequestManger sharedClient] GET:@"apps/order/deleteShoppingCart" parameters:@{@"productId":model.productId?:@""}  showMessage:NO  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        success();
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        success();
+    }];
 
+}
 - (void)deletdaP:(ProductModel *)model back:(voidBlock)success{
-    //http:/ /134.175.70.113:8000/apps/order/deleteShoppingCart?productId=1
-    //http://134.175.70.113:8000/apps/order/deleteProduct?productId=333
-//    if (!model.orderId) {
-//        
-//        return;
-//    }
-//    if (model.awardTemplateId.intValue) {
-//        [[RequestManger sharedClient] GET:@"apps/order/deleteProduct" parameters:@{@"productId":model.productId?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-//            success();
-//        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-//        }];
-//        return;
-//    }
+
     [[RequestManger sharedClient] GET:@"apps/order/deleteShoppingCart" parameters:@{@"productId":model.productId?:@""} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         success();
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        success();
     }];
 }
+
 /*
 #pragma mark - Navigation
 
