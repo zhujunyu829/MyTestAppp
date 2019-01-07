@@ -120,7 +120,7 @@
     fled.height = 50;
     fled.width = ZJYDeviceWidth -50;
     fled.left = 20;
-    fled.keyboardType = UIKeyboardTypeASCIICapable;
+    fled.keyboardType = UIKeyboardTypePhonePad;
     fled.font = ZJYSYFont(14);
     fled.placeholder = [NSString stringWithFormat:@"请输入%@",title];
     fled.leftViewMode = UITextFieldViewModeAlways;
